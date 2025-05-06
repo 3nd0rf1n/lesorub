@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Лесоруб Идл Игра</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>🌲 Лесоруб</h1>
+        <div id="resources" class="card">
+            <p>🌲 Дерево: <span id="wood">0</span></p>
+            <p>👷 Рабочие: <span id="workers">0</span></p>
+            <p>📈 Дерево в сек: <span id="woodPerSecond">0</span></p>
+        </div>
+        <button id="chopBtn" class="action-btn">🪓 Рубить дерево</button>
+        <div id="upgrades" class="card">
+            <button id="buyWorker">👷 Нанять рабочего (10 дерева)</button>
+            <button id="resetGame">♻️ Престиж (1000 дерева)</button>
+            <button id="fullReset">🧹 Сбросить прогресс</button>
+        </div>
+    </div>
+    <div id="notifications" class="notifications"></div>
+    <script src="script.js"></script>
+</body>
+</html>
