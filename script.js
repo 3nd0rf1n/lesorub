@@ -20,7 +20,29 @@ const achievements = [
   { id: 'tenWood', name: '10 дерева!', condition: () => wood >= 10 },
   { id: 'firstWorker', name: 'Первый рабочий', condition: () => workers >= 1 },
   { id: 'prestige1', name: 'Первый престиж', condition: () => prestigeBonus >= 1 },
+  { id: 'wood100', name: '100 дерева', condition: () => wood >= 100 },
+  { id: 'wood500', name: '500 дерева', condition: () => wood >= 500 },
+  { id: 'wood1k', name: '1000 дерева', condition: () => wood >= 1000 },
+  { id: 'wood10k', name: '10 000 дерева', condition: () => wood >= 10000 },
+  { id: 'wood100k', name: '100 000 дерева', condition: () => wood >= 100000 },
+  { id: 'worker5', name: '5 рабочих', condition: () => workers >= 5 },
+  { id: 'worker10', name: '10 рабочих', condition: () => workers >= 10 },
+  { id: 'worker50', name: '50 рабочих', condition: () => workers >= 50 },
+  { id: 'worker100', name: '100 рабочих', condition: () => workers >= 100 },
+  { id: 'worker500', name: '500 рабочих', condition: () => workers >= 500 },
+  { id: 'prestige5', name: '5 престижей', condition: () => prestigeBonus >= 5 },
+  { id: 'prestige10', name: '10 престижей', condition: () => prestigeBonus >= 10 },
+  { id: 'prestige50', name: '50 престижей', condition: () => prestigeBonus >= 50 },
+  { id: 'prestige100', name: '100 престижей', condition: () => prestigeBonus >= 100 },
+  { id: 'woodPerSecond10', name: '10 дерева в сек', condition: () => workers * (1 + prestigeBonus) >= 10 },
+  { id: 'woodPerSecond100', name: '100 дерева в сек', condition: () => workers * (1 + prestigeBonus) >= 100 },
+  { id: 'woodPerSecond500', name: '500 дерева в сек', condition: () => workers * (1 + prestigeBonus) >= 500 },
+  { id: 'clickNothing', name: 'Ничего не произошло', condition: () => wood === 0 && workers === 0 && prestigeBonus === 0 },
+  { id: 'overkill', name: 'Больше чем нужно', condition: () => wood >= 1000000 },
+  { id: 'lazy', name: 'Пусть другие работают', condition: () => workers >= 100 && wood === 0 },
+
 ];
+
 
 function updateDisplay() {
   woodEl.textContent = wood;
@@ -37,12 +59,12 @@ function checkAchievements() {
     if (!unlockedAchievements.includes(a.id) && a.condition()) {
       unlockedAchievements.push(a.id);
       localStorage.setItem('achievements', JSON.stringify(unlockedAchievements));
-      showAchievementPopup(`🏆 Достижение разблокировано: ${a.name}`);
+      vementPopup(`🏆 Достижение разблокировано: ${a.name}`);
     }
   });
 }
 
-function showAchievementPopup(message) {
+function vementPopup(message) {
   const popup = document.getElementById('achievementPopup');
   const msg = document.getElementById('achievementMessage');
   msg.textContent = message;
@@ -56,7 +78,7 @@ function showAchievementPopup(message) {
 }
 
 function showOfflineNotification(message) {
-  showAchievementPopup(message);
+  vementPopup(message);
 }
 
 function showAchievements() {
@@ -92,9 +114,9 @@ resetGameBtn.addEventListener('click', () => {
     prestigeBonus += 1;
     updateDisplay();
     checkAchievements();
-    showAchievementPopup(`🔁 Престиж! Новый бонус: +${prestigeBonus}`);
+    vementPopup(`🔁 Престиж! Новый бонус: +${prestigeBonus}`);
   } else {
-    showAchievementPopup("Для сброса прогресса нужно хотя бы 1000 дерева.");
+    vementPopup("Для сброса прогресса нужно хотя бы 1000 дерева.");
   }
 });
 
@@ -106,9 +128,10 @@ fullResetBtn.addEventListener('click', () => {
     prestigeBonus = 0;
     unlockedAchievements = [];
     updateDisplay();
-    showAchievementPopup("Прогресс сброшен!");
+    vementPopup("Прогресс сброшен!");
   });
 });
+
 
 achievementsBtn.addEventListener('click', () => {
   showAchievements();
@@ -204,3 +227,32 @@ closeAchievements.addEventListener('click', () => {
   achievementsModal.classList.remove('show');
   achievementsModal.classList.add('hidden');
 });
+
+// При загрузке страницы закрываем модальное окно
+window.addEventListener('DOMContentLoaded', () => {
+  achievementsModal.classList.remove('show');
+  achievementsModal.classList.add('hidden');
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const loadingScreen = document.getElementById("loading-screen");
+  const progressBar = document.getElementById("progress-bar");
+
+  // Показываем экран загрузки каждый раз
+  loadingScreen.style.display = "flex"; 
+
+  // Имитация процесса загрузки
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += 10;
+    progressBar.style.width = `${progress}%`;
+
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        loadingScreen.style.display = "none"; // Скрываем экран загрузки
+      }, 500); // Задержка перед скрытием
+    }
+  }, 500); // Обновляем прогресс каждые 500 мс
+});
+
