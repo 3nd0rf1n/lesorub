@@ -1,0 +1,64 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const list = document.getElementById("achievementsList");
+  const achievements = JSON.parse(localStorage.getItem("achievements")) || [];
+
+  const allAchievements = [
+    { id: 'firstClick', name: 'Перший удар' },
+    { id: 'tenWood', name: '10 дерева!' },
+    { id: 'firstWorker', name: 'Перший робітник' },
+    { id: 'prestige1', name: 'Перший престиж' },
+    { id: 'wood100', name: '100 дерева' },
+    { id: 'wood500', name: '500 дерева' },
+    { id: 'wood1k', name: '1000 дерева' },
+    { id: 'wood10k', name: '10 000 дерева' },
+    { id: 'wood100k', name: '100 000 дерева' },
+    { id: 'worker5', name: '5 робітників' },
+    { id: 'worker10', name: '10 робітників' },
+    { id: 'worker50', name: '50 робітників' },
+    { id: 'worker100', name: '100 робітників' },
+    { id: 'worker500', name: '500 робітників' },
+    { id: 'prestige5', name: '5 престижів' },
+    { id: 'prestige10', name: '10 престижів' },
+    { id: 'prestige50', name: '50 престижів' },
+    { id: 'prestige100', name: '100 престижів' },
+    { id: 'woodPerSecond10', name: '10 дерева в сек' },
+    { id: 'woodPerSecond100', name: '100 дерева в сек' },
+    { id: 'woodPerSecond500', name: '500 дерева в сек' },
+    { id: 'clickNothing', name: 'Нічого не сталося' },
+    { id: 'overkill', name: 'Більше ніж потрібно' },
+    { id: 'lazy', name: 'Нехай інші працюють' }
+  ];
+
+  allAchievements.forEach(a => {
+    const li = document.createElement("li");
+    li.textContent = `${a.name} ${achievements.includes(a.id) ? "✅" : "❌"}`;
+    list.appendChild(li);
+  });
+
+  document.getElementById("closeAchievements").addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
+});
+
+// ✅ Прогрес-бар і приховування завантаження
+document.addEventListener("DOMContentLoaded", () => {
+  const loadingScreen = document.getElementById("loading-screen");
+  const progressBar = document.getElementById("progress-bar");
+
+  if (!loadingScreen || !progressBar) return;
+
+  loadingScreen.style.display = "flex";
+
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += 10;
+    progressBar.style.width = `${progress}%`;
+
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        loadingScreen.style.display = "none";
+      },150);
+    }
+  }, 150);
+});

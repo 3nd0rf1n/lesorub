@@ -1,0 +1,108 @@
+/* Основные стили для страницы */
+body {
+  background: #fff8e1;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+  text-align: center;
+  overflow-y: auto; /* Прокрутка при необходимости */
+  max-height: 100vh; /* Ограничение высоты страницы */
+}
+
+/* Заголовок */
+h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #0277bd;
+}
+
+/* Список достижений */
+ul#achievementsList {
+  list-style: none;
+  padding: 0;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+ul#achievementsList li {
+  background: #81d4fa;
+  margin: 10px 0;
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Стиль кнопки */
+button#closeAchievements {
+  margin-top: 30px;
+  padding: 12px 24px;
+  background-color: #039be5;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Стиль кнопки при наведении */
+button#closeAchievements:hover {
+  background-color: #0288d1;
+  transform: translateY(-3px);
+}
+
+/* Стиль экрана загрузки */
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9); /* Полупрозрачный чёрный фон для затемнения */
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000; /* Чтобы экран загрузки был поверх всего */
+  font-family: 'Arial', sans-serif;
+  transition: opacity 0.5s ease-out;
+}
+
+/* Текст загрузки */
+#loading-screen p {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Анимация для текста */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Контейнер прогресс-бара */
+#progress-bar-container {
+  width: 80%;
+  height: 25px;
+  background: linear-gradient(45deg, #6e7f7d, #3a4642); /* Градиентный фон */
+  border-radius: 50px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Тень вокруг прогресс-бара */
+  overflow: hidden;
+}
+
+/* Сам прогресс-бар */
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(45deg, #ff3d00, #ffbb33); /* Градиентный цвет */
+  border-radius: 50px;
+  transition: width 0.3s ease-in-out;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Тень для самого прогресса */
+}

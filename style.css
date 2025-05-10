@@ -234,3 +234,51 @@ body {
 #game-content {
   display: none; /* Скрываем весь игровой контент до завершения загрузки */
 }
+
+
+
+
+
+.achievement-btn {
+  background-color: #5e81f4;
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  margin: 10px 5px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+}
+
+.achievement-btn:hover {
+  background-color: #4c70e0;
+  transform: translateY(-4px);
+}
+
+.achievement-btn:active {
+  transform: translateY(2px);
+}
+/* Стиль для кнопкоподібних посилань */
+a.action-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #5e81f4;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+a.action-btn:hover {
+  background-color: #5e81f4;
+  transform: translateY(-3px);
+}

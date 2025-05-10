@@ -11,7 +11,6 @@ const chopBtn = document.getElementById('chopBtn');
 const buyWorkerBtn = document.getElementById('buyWorker');
 const resetGameBtn = document.getElementById('resetGame');
 const fullResetBtn = document.getElementById('fullReset');
-const achievementsBtn = document.getElementById('achievementsBtn');
 const achievementsModal = document.getElementById('achievementsModal');
 const closeAchievements = document.getElementById('closeAchievements');
 
@@ -40,9 +39,7 @@ const achievements = [
   { id: 'clickNothing', name: 'Ничего не произошло', condition: () => wood === 0 && workers === 0 && prestigeBonus === 0 },
   { id: 'overkill', name: 'Больше чем нужно', condition: () => wood >= 1000000 },
   { id: 'lazy', name: 'Пусть другие работают', condition: () => workers >= 100 && wood === 0 },
-
 ];
-
 
 function updateDisplay() {
   woodEl.textContent = wood;
@@ -132,12 +129,7 @@ fullResetBtn.addEventListener('click', () => {
   });
 });
 
-
-achievementsBtn.addEventListener('click', () => {
-  showAchievements();
-});
-
-closeAchievements.addEventListener('click', () => {
+closeAchievements?.addEventListener('click', () => {
   achievementsModal.classList.add('hidden');
 });
 
@@ -217,31 +209,15 @@ setInterval(() => {
 updateDisplay();
 checkAchievements();
 
-achievementsBtn.addEventListener('click', () => {
-  showAchievements(); // Обновляем список достижений
-  achievementsModal.classList.remove('hidden');
-  achievementsModal.classList.add('show');
-});
-
-closeAchievements.addEventListener('click', () => {
-  achievementsModal.classList.remove('show');
-  achievementsModal.classList.add('hidden');
-});
-
-// При загрузке страницы закрываем модальное окно
-window.addEventListener('DOMContentLoaded', () => {
-  achievementsModal.classList.remove('show');
-  achievementsModal.classList.add('hidden');
-});
-
+// ✅ Прогресс-бар и скрытие загрузки
 document.addEventListener("DOMContentLoaded", () => {
   const loadingScreen = document.getElementById("loading-screen");
   const progressBar = document.getElementById("progress-bar");
 
-  // Показываем экран загрузки каждый раз
-  loadingScreen.style.display = "flex"; 
+  if (!loadingScreen || !progressBar) return;
 
-  // Имитация процесса загрузки
+  loadingScreen.style.display = "flex";
+
   let progress = 0;
   const interval = setInterval(() => {
     progress += 10;
@@ -250,9 +226,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (progress >= 100) {
       clearInterval(interval);
       setTimeout(() => {
-        loadingScreen.style.display = "none"; // Скрываем экран загрузки
-      }, 500); // Задержка перед скрытием
+        loadingScreen.style.display = "none";
+      }, 500);
     }
-  }, 500); // Обновляем прогресс каждые 500 мс
+  }, 500);
 });
-
