@@ -15,6 +15,8 @@
     </div>
   </div>
 
+  <div id="particles-js"></div>
+
   <div id="achievementPopup" class="achievement-popup hidden">
     <p id="achievementMessage">🏆 Досягнення!</p>
   </div>
@@ -44,5 +46,60 @@
   </div>
 
   <script src="script.js"></script>
+
+  <!-- Подключаем библиотеку -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+<!-- Инициализация частиц -->
+<script>
+  particlesJS("particles-js", {
+    "particles": {
+      "number": {
+        "value": 60,
+        "density": {
+          "enable": true,
+          "value_area": 800
+        }
+      },
+      "color": {
+        "value": "#ffffff"
+      },
+      "shape": {
+        "type": "circle"
+      },
+      "opacity": {
+        "value": 0.5
+      },
+      "size": {
+        "value": 3
+      },
+      "line_linked": {
+        "enable": true,
+        "distance": 120,
+        "color": "#ffffff",
+        "opacity": 0.4,
+        "width": 1
+      },
+      "move": {
+        "enable": true,
+        "speed": 3
+      }
+    },
+    "interactivity": {
+      "events": {
+        "onhover": {
+          "enable": true,
+          "mode": "grab"
+        },
+        "onclick": {
+          "enable": true,
+          "mode": "push"
+        }
+      }
+    },
+    "retina_detect": true
+  });
+</script>
+
 </body>
 </html>
