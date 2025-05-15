@@ -1,11 +1,30 @@
-const startGameBtn = document.getElementById('startGameBtn');
-const settingsBtn = document.getElementById('settingsBtn');
+// Обработчики кнопок
+document.getElementById('faqBtn').addEventListener('click', () => {
+  const faqText = `
+  Часто задаваемые вопросы:
+  1. Как начать игру? — Нажмите кнопку "Начать игру".
+  2. Как открыть магазин? — Нажмите кнопку "Магазин".
+  3. Где настройки? — Нажмите "Настройки".
+  `;
 
-startGameBtn.addEventListener('click', () => {
-  // Перейдем на главную игру
-  window.location.href = 'index.html'; // или путь к твоему игровому файлу
+  showNotification(faqText);
 });
 
-settingsBtn.addEventListener('click', () => {
-  alert('Здесь будут настройки игры!');
+document.getElementById('startGameBtn').addEventListener('click', () => {
+  window.location.href = 'menu.html';
 });
+
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  window.location.href = 'settings.html';
+});
+
+
+document.getElementById('shopBtn').addEventListener('click', () => {
+  // Логика открытия магазина (если есть)
+  alert('Открываем магазин...'); // или переход куда-то
+});
+
+document.getElementById('faqBtn').addEventListener('click', () => {
+  window.location.href = 'faq.html';
+});
+

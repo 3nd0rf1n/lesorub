@@ -285,3 +285,33 @@ toggleBtn.addEventListener("click", () => {
     toggleBtn.textContent = "🔇";
   }
 });
+
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  window.location.href = 'settings.html';
+});
+
+const audio = document.getElementById('bg-music');
+
+// При загрузке страницы выставляем громкость из localStorage (или 0.5 по умолчанию)
+let savedVolume = localStorage.getItem('musicVolume');
+if (savedVolume === null) savedVolume = 50;
+audio.volume = savedVolume / 100;
+
+// Если в другой вкладке изменили громкость, обновляем громкость в текущей странице
+window.addEventListener('storage', (event) => {
+  if (event.key === 'musicVolume') {
+    audio.volume = event.newValue / 100;
+  }
+});
+
+function applyGraphicsQuality() {
+  const quality = localStorage.getItem('graphicsQuality') || 'medium';
+  document.body.classList.remove('graphics-low', 'graphics-medium', 'graphics-high');
+  document.body.classList.add('graphics-' + quality);
+}
+
+applyGraphicsQuality();
+
+window.addEventListener('storage', (e) => {
+  if (e.key === 'graphicsQuality') applyGraphicsQuality();
+});

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Настройки</title>
+  <link rel="stylesheet" href="menu.css" />
+</head>
+
+<audio id="bg-music" src="background-music.mp3" loop autoplay></audio>
+
+<body>
+  <div class="faq-container">
+    <h1>Настройки</h1>
+
+    <div class="setting-item">
+      <label for="volumeRange">Громкость: <span id="volumeValue">50%</span></label>
+      <input type="range" id="volumeRange" min="0" max="100" step="1" />
+    </div>
+
+    <div class="setting-item">
+      <label for="graphicsSelect">Качество графики:</label>
+      <select id="graphicsSelect">
+        <option value="low">Низкое</option>
+        <option value="medium">Среднее</option>
+        <option value="high">Высокое</option>
+      </select>
+    </div>
+
+    <div class="faq-buttons" style="margin-top: 40px;">
+      <button id="backBtn">← Назад</button>
+      <button id="applyBtn">Применить и продолжить →</button>
+    </div>
+
+  </div>
+
+  <script>
+    const volumeRange = document.getElementById('volumeRange');
+const volumeValue = document.getElementById('volumeValue');
+const graphicsSelect = document.getElementById('graphicsSelect');
+const audio = document.getElementById('bg-music');
+
+function loadSettings() {
+  const savedVolume = localStorage.getItem('musicVolume');
+  const savedGraphics = localStorage.getItem('graphicsQuality');
+
+  volumeRange.value = savedVolume !== null ? savedVolume : 50;
+  volumeValue.textContent = volumeRange.value + '%';
+
+  graphicsSelect.value = savedGraphics !== null ? savedGraphics : 'medium';
+
+  audio.volume = volumeRange.value / 100; // выставляем громкость аудио при загрузке
+}
+
+function saveSettings() {
+  localStorage.setItem('musicVolume', volumeRange.value);
+  localStorage.setItem('graphicsQuality', graphicsSelect.value);
+}
+
+// Меняем громкость и текст сразу при движении ползунка
+volumeRange.addEventListener('input', () => {
+  volumeValue.textContent = volumeRange.value + '%';
+  audio.volume = volumeRange.value / 100;
+});
+
+document.getElementById('backBtn').addEventListener('click', () => {
+  window.history.back();
+});
+
+document.getElementById('applyBtn').addEventListener('click', () => {
+  saveSettings();
+  window.location.href = 'menu.html';
+});
+
+loadSettings();
+
+  </script>
+</body>
+</html>

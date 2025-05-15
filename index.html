@@ -4,14 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Меню игры</title>
-  <link rel="stylesheet" href="index.html" />
+  <link rel="stylesheet" href="menu.css" />
 </head>
 <body>
-  <div id="startMenu">
+  <div class="menu-container">
     <h1>Добро пожаловать в игру!</h1>
-    <button id="startGameBtn">Начать игру</button>
-    <button id="settingsBtn">Настройки</button>
+    <nav class="menu-buttons">
+      <button id="startGameBtn">Начать игру</button>
+      <button id="settingsBtn">Настройки</button>
+      <button id="shopBtn">Магазин</button>
+    </nav>
   </div>
+
+ <!-- Кнопка FAQ снизу справа -->
+<button id="faqBtn" title="FAQ">FAQ</button>
+
+<script>
+  document.getElementById('faqBtn').addEventListener('click', () => {
+    window.location.href = 'faq.html';
+  });
+  
+</script>
 
   <script src="menu.js"></script>
 </body>

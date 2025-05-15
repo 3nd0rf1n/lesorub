@@ -296,3 +296,42 @@ a.action-btn:hover {
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* Тёмный градиент */
 }
 
+body.graphics-low {
+  image-rendering: pixelated;
+  filter: none;
+  font-family: 'Press Start 2P', cursive; /* пиксельный шрифт */
+  /* можно добавить масштабирование, но аккуратно! */
+}
+
+body.graphics-medium {
+  image-rendering: crisp-edges;
+  filter: none;
+  font-family: Arial, sans-serif;
+}
+
+body.graphics-high {
+  image-rendering: auto;
+  filter: none;
+  font-family: Arial, sans-serif;
+}
+
+body.graphics-low, 
+body.graphics-low * {
+  font-family: 'Press Start 2P', cursive !important;
+}
+
+/* Дополнительные стили для фона при низкой и средней графике */
+body.graphics-low #particles-js {
+  opacity: 0.2;
+  filter: blur(2px) brightness(0.4) contrast(0.5);
+}
+
+body.graphics-medium #particles-js {
+  opacity: 0.5;
+  filter: blur(1px) brightness(0.7) contrast(0.8);
+}
+
+body.graphics-high #particles-js {
+  opacity: 1;
+  filter: none;
+}

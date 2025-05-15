@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FAQ — Часто задаваемые вопросы</title>
+  <link rel="stylesheet" href="menu.css" />
+</head>
+<body>
+  <div class="faq-container">
+    <h1>FAQ — Часто задаваемые вопросы</h1>
+    <div class="faq-content">
+      <h3>1. Как начать игру?</h3>
+      <p>Нажмите кнопку "Начать игру" в главном меню.</p>
+      
+      <h3>2. Как открыть магазин?</h3>
+      <p>Перейдите в раздел "Магазин" из меню.</p>
+      
+      <h3>3. Где найти настройки?</h3>
+      <p>Нажмите кнопку "Настройки" в главном меню.</p>
+      
+      <h3>4. Можно ли сохранить прогресс?</h3>
+      <p>В игре автоматически сохраняется прогресс.</p>
+    </div>
+
+    <div class="faq-buttons">
+      <button id="backBtn">← Назад в меню</button>
+      <button id="continueBtn">Продолжить игру →</button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('backBtn').addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+
+    document.getElementById('continueBtn').addEventListener('click', () => {
+      window.location.href = 'menu.html';
+    });
+  </script>
+</body>
+</html>

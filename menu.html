@@ -4,7 +4,19 @@
   <meta charset="UTF-8" />
   <title>Лісоруб Ідл Ігра</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
 </head>
+
+<script>
+  function applyGraphicsSetting() {
+    const savedGraphics = localStorage.getItem('graphicsQuality') || 'medium';
+    document.body.classList.remove('graphics-low', 'graphics-medium', 'graphics-high');
+    document.body.classList.add(`graphics-${savedGraphics}`);
+  }
+
+  applyGraphicsSetting(); // вызываем при загрузке
+</script>
+
 <body>
 
   <div id="particles-js"></div>
@@ -47,6 +59,7 @@
     <div id="upgrades" class="card">
       <button id="buyWorker">👷 Найняти робітника (10 дерева)</button>
       <button id="resetGame">♻️ Престиж (1000 дерева)</button>
+      <button id="settingsBtn">Настройки</button>
       <a href="achievements.html" class="action-btn">🏆 Досягнення</a>
 
   <button id="toggle-music">🔊</button>

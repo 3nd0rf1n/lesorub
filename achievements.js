@@ -1,4 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Применение графики
+  function applyGraphicsQuality() {
+    const quality = localStorage.getItem('graphicsQuality') || 'medium';
+    document.body.classList.remove('graphics-low', 'graphics-medium', 'graphics-high');
+    document.body.classList.add('graphics-' + quality);
+  }
+
+  applyGraphicsQuality();
+
   const list = document.getElementById("achievementsList");
   const achievements = JSON.parse(localStorage.getItem("achievements")) || [];
 
@@ -38,53 +47,35 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("closeAchievements").addEventListener("click", () => {
     window.location.href = "index.html";
   });
-});
 
-// ✅ Прогрес-бар і приховування завантаження
-document.addEventListener("DOMContentLoaded", () => {
+  // Прогресс-бар
   const loadingScreen = document.getElementById("loading-screen");
   const progressBar = document.getElementById("progress-bar");
 
-  if (!loadingScreen || !progressBar) return;
+  if (loadingScreen && progressBar) {
+    loadingScreen.style.display = "flex";
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 10;
+      progressBar.style.width = `${progress}%`;
 
-  loadingScreen.style.display = "flex";
+      if (progress >= 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+          loadingScreen.style.display = "none";
+        }, 150);
+      }
+    }, 150);
+  }
 
-  let progress = 0;
-  const interval = setInterval(() => {
-    progress += 10;
-    progressBar.style.width = `${progress}%`;
-
-    if (progress >= 100) {
-      clearInterval(interval);
-      setTimeout(() => {
-        loadingScreen.style.display = "none";
-      },150);
-    }
-  }, 150);
-});
-
-particlesJS('particles-js',
-  {
+  // Частицы
+  particlesJS('particles-js', {
     "particles": {
-      "number": {
-        "value": 60,
-        "density": {
-          "enable": true,
-          "value_area": 800
-        }
-      },
-      "color": {
-        "value": "#ffffff"
-      },
-      "shape": {
-        "type": "circle"
-      },
-      "opacity": {
-        "value": 0.3
-      },
-      "size": {
-        "value": 3
-      },
+      "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+      "color": { "value": "#ffffff" },
+      "shape": { "type": "circle" },
+      "opacity": { "value": 0.3 },
+      "size": { "value": 3 },
       "line_linked": {
         "enable": true,
         "distance": 150,
@@ -92,19 +83,30 @@ particlesJS('particles-js',
         "opacity": 0.2,
         "width": 1
       },
-      "move": {
-        "enable": true,
-        "speed": 2
-      }
+      "move": { "enable": true, "speed": 2 }
     },
     "interactivity": {
-      "events": {
-        "onhover": {
-          "enable": true,
-          "mode": "repulse"
-        }
-      }
+      "events": { "onhover": { "enable": true, "mode": "repulse" } }
     },
     "retina_detect": true
+  });
+
+  // Громкость
+  const audio = document.getElementById('bg-music');
+  let savedVolume = localStorage.getItem('musicVolume');
+  if (savedVolume === null) savedVolume = 50;
+  if (audio) audio.volume = savedVolume / 100;
+});
+
+// Следим за изменением графики
+window.addEventListener('storage', (e) => {
+  if (e.key === 'graphicsQuality') {
+    document.body.classList.remove('graphics-low', 'graphics-medium', 'graphics-high');
+    document.body.classList.add('graphics-' + e.newValue);
   }
-);
+
+  if (e.key === 'musicVolume') {
+    const audio = document.getElementById('bg-music');
+    if (audio) audio.volume = e.newValue / 100;
+  }
+});
