@@ -1,63 +1,18 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Лісоруб Ідл Ігра</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Меню игры</title>
+  <link rel="stylesheet" href="menu.css" />
 </head>
 <body>
-
-  <div id="particles-js"></div>
-
-  <!-- Подключение particles.js -->
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-
-<!-- Твоя инициализация -->
-<script src="particles-init.js"></script>
-
-
-  <!-- Екран завантаження -->
-  <div id="loading-screen">
-    <p>Завантаження гри...</p>
-    <div id="progress-bar-container">
-      <div id="progress-bar"></div>
-    </div>
+  <div id="startMenu">
+    <h1>Добро пожаловать в игру!</h1>
+    <button id="startGameBtn">Начать игру</button>
+    <button id="settingsBtn">Настройки</button>
   </div>
 
-  <div id="achievementPopup" class="achievement-popup hidden">
-    <p id="achievementMessage">🏆 Досягнення!</p>
-  </div>
-
-  <div id="achievementsModal" class="modal hidden">
-    <div class="modal-content">
-      <h2>Досягнення</h2>
-      <ul id="achievementsList"></ul>
-      <button id="closeAchievements">Закрити</button>
-    </div>
-  </div>
-
-  <div class="game-container">
-    <h1>🌲 Лісоруб</h1>
-    <div id="resources" class="card">
-      <p>🌲 Дерево: <span id="wood">0</span></p>
-      <p>👷 Робітники: <span id="workers">0</span></p>
-      <p>📈 Дерево в сек: <span id="woodPerSecond">0</span></p>
-    </div>
-    <button id="chopBtn" class="action-btn">🪓 Рубати дерево</button>
-    <div id="upgrades" class="card">
-      <button id="buyWorker">👷 Найняти робітника (10 дерева)</button>
-      <button id="resetGame">♻️ Престиж (1000 дерева)</button>
-      <a href="achievements.html" class="action-btn">🏆 Досягнення</a>
-
-  <button id="toggle-music">🔊</button>
-<audio id="bg-music" loop>
-  <source src="background-music.mp3" type="audio/mpeg">
-  Ваш браузер не поддерживает аудио.
-</audio>
-
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+  <script src="menu.js"></script>
 </body>
 </html>
