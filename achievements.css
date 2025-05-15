@@ -1,15 +1,13 @@
 /* Основные стили для страницы */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(120deg, #1e3c72, #2a5298); /* Новый градиент */
-  color: #333333;
+  background: #fff8e1;
+  font-family: 'Segoe UI', sans-serif;
   margin: 0;
-  padding: 30px;
+  padding: 20px;
+  color: #333;
   text-align: center;
-  font-weight: normal;
-  line-height: 1.6;
-  overflow-y: auto;
-  height: 100vh;
+  overflow-y: auto; /* Прокрутка при необходимости */
+  max-height: 100vh; /* Ограничение высоты страницы */
 }
 
 /* Заголовок */
@@ -107,13 +105,4 @@ button#closeAchievements:hover {
   border-radius: 50px;
   transition: width 0.3s ease-in-out;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Тень для самого прогресса */
-}
-
-#particles-js {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1; /* чтобы частицы были на фоне */
 }
