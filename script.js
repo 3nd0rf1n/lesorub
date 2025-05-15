@@ -277,3 +277,23 @@ particlesJS('particles-js',
     "retina_detect": true
   }
 );
+
+const music = document.getElementById("bg-music");
+const toggleBtn = document.getElementById("toggle-music");
+
+// Автовоспроизведение (по клику пользователя из-за ограничений браузеров)
+document.addEventListener("click", function autoPlayOnce() {
+  music.play();
+  document.removeEventListener("click", autoPlayOnce);
+});
+
+// Переключатель звука
+toggleBtn.addEventListener("click", () => {
+  if (music.paused) {
+    music.play();
+    toggleBtn.textContent = "🔊";
+  } else {
+    music.pause();
+    toggleBtn.textContent = "🔇";
+  }
+});
