@@ -117,18 +117,6 @@ resetGameBtn.addEventListener('click', () => {
   }
 });
 
-fullResetBtn.addEventListener('click', () => {
-  showConfirmationPopup("Вы уверены, что хотите сбросить весь прогресс?", () => {
-    localStorage.clear();
-    wood = 0;
-    workers = 0;
-    prestigeBonus = 0;
-    unlockedAchievements = [];
-    updateDisplay();
-    vementPopup("Прогресс сброшен!");
-  });
-});
-
 closeAchievements?.addEventListener('click', () => {
   achievementsModal.classList.add('hidden');
 });
