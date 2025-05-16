@@ -35,6 +35,35 @@ body {
   background: #1a54d1;
 }
 
+.welcome-message {
+  display: block;
+  margin: 15px 0;
+  font-weight: 600;
+  color: #aad8ff;
+}
+
+/* Блок с кнопкой выхода */
+.logout-container {
+  margin-top: 30px;
+}
+
+#logoutBtn {
+  padding: 10px 25px;
+  border-radius: 8px;
+  background-color: #ff4d4d;
+  border: none;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(255, 77, 77, 0.7);
+  transition: background-color 0.3s ease;
+  display: none; /* По умолчанию скрыта */
+}
+
+#logoutBtn:hover {
+  background-color: #cc3a3a;
+}
+
 /* Кнопка FAQ снизу справа */
 #faqBtn {
   position: fixed;
@@ -91,53 +120,4 @@ body {
     opacity: 0;
     transform: translateX(100%);
   }
-}
-
-.faq-container {
-  max-width: 700px;
-  margin: 40px auto;
-  background: rgba(0,0,0,0.4);
-  border-radius: 15px;
-  padding: 30px 40px;
-  box-shadow: 0 0 25px rgba(0,0,0,0.5);
-  color: #fff;
-  font-size: 16px;
-}
-
-.faq-container h1 {
-  margin-bottom: 25px;
-}
-
-.faq-content h3 {
-  margin-top: 20px;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: #ffd54f;
-}
-
-.faq-content p {
-  margin: 0 0 12px 0;
-  line-height: 1.4;
-}
-
-.faq-buttons {
-  margin-top: 40px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.faq-buttons button {
-  background: #2575fc;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 10px;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 5px 10px rgba(37,117,252,0.5);
-  transition: background-color 0.3s ease;
-}
-
-.faq-buttons button:hover {
-  background: #1a54d1;
 }

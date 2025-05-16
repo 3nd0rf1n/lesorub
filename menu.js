@@ -1,84 +1,112 @@
-const loginBtn = document.getElementById('loginBtn');
-const welcomeMsg = document.getElementById('welcomeMsg');
+// Инициализация Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyBxBkAjiy55DO7UBKltpxeagqzTIG7whSM",
+  authDomain: "lesorubik-b8937.firebaseapp.com",
+  projectId: "lesorubik-b8937",
+  storageBucket: "lesorubik-b8937.firebasestorage.app",
+  messagingSenderId: "587896530691",
+  appId: "1:587896530691:web:bcf53cb37468ca66fd6b36",
+  measurementId: "G-0B3DH2DM1E"
+};
+firebase.initializeApp(firebaseConfig);
 
-document.getElementById('faqBtn').addEventListener('click', () => {
-  window.location.href = 'faq.html';
-});
+const auth = firebase.auth();
 
-document.getElementById('startGameBtn').addEventListener('click', () => {
-  window.location.href = 'menu.html';
-});
+let isLoggedIn = false;
+let progressLoaded = false;
 
-document.getElementById('settingsBtn').addEventListener('click', () => {
-  window.location.href = 'settings.html';
-});
+function ShowNotification(message) {
+  const container = document.getElementById('notification-container');
+  if (!container) return;
 
-document.getElementById('shopBtn').addEventListener('click', () => {
-  alert('Открываем магазин...');
-});
+  const notif = document.createElement('div');
+  notif.className = 'notification';
+  notif.textContent = message;
+  container.appendChild(notif);
 
-// Вход через Google
-loginBtn.addEventListener('click', () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  firebase.auth().signInWithPopup(provider)
-    .then(result => {
-      const user = result.user;
-      welcomeMsg.textContent = `Привет, ${user.displayName}!`;
-      console.log('Пользователь вошёл:', user);
-      loadUserData(user.uid);
+  setTimeout(() => {
+    notif.remove();
+  }, 3400);
+}
+
+function loadProgress(uid) {
+  const dbRef = firebase.database().ref('users/' + uid + '/progress');
+  return dbRef.once('value')
+    .then(snapshot => {
+      const progress = snapshot.val() || {};
+      localStorage.setItem('progress', JSON.stringify(progress));
+      ShowNotification('Прогресс загружен!');
+      progressLoaded = true;
     })
     .catch(error => {
-      console.error('Ошибка входа:', error);
-      alert('Ошибка входа: ' + error.message);
+      ShowNotification('Ошибка загрузки прогресса: ' + error.message);
+      progressLoaded = false;
     });
-});
+}
 
-// Отслеживание изменений статуса пользователя
-firebase.auth().onAuthStateChanged(user => {
-  if (user) {
-    welcomeMsg.textContent = `Привет, ${user.displayName}!`;
-        document.getElementById('startGameBtn').disabled = false;
-    loadUserData(user.uid);
-  } else {
-    welcomeMsg.textContent = '';
-  }
-});
 
-// Загрузка данных пользователя из базы
-async function loadUserData(uid) {
-  try {
-    const userRef = firebase.database().ref('users/' + uid);
-    const snapshot = await userRef.get();
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      // Здесь нужно определить переменные wood, workers и др., или вставить свою логику
-      wood = data.wood || 0;
-      workers = data.workers || 0;
-      prestigeBonus = data.prestigeBonus || 0;
-      unlockedAchievements = data.achievements || [];
-      workerPrice = data.workerPrice || 50;
-      updateDisplay();
-      checkAchievements();
-      saveProgressToFirebase();
+document.addEventListener('DOMContentLoaded', () => {
+  const loginBtn = document.getElementById('loginBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const startGameBtn = document.getElementById('startGameBtn');
+  const welcomeMsg = document.getElementById('welcomeMsg');
+  const faqBtn = document.getElementById('faqBtn');
+
+  loginBtn.addEventListener('click', () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+      .then(() => {
+        // onAuthStateChanged обработает состояние
+      })
+      .catch((error) => {
+        ShowNotification('Ошибка входа: ' + error.message);
+      });
+  });
+
+  logoutBtn.addEventListener('click', () => {
+    auth.signOut()
+      .then(() => {
+        ShowNotification('Вы вышли из аккаунта');
+      })
+      .catch((error) => {
+        ShowNotification('Ошибка выхода: ' + error.message);
+      });
+  });
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      isLoggedIn = true;
+      welcomeMsg.textContent = `Привет, ${user.displayName}!`;
+      loginBtn.style.display = 'none';
+      logoutBtn.style.display = 'inline-block';
+
+      loadProgress(user.uid);
     } else {
-      saveProgressToFirebase();
+      isLoggedIn = false;
+      progressLoaded = false;
+      welcomeMsg.textContent = '';
+      loginBtn.style.display = 'inline-block';
+      logoutBtn.style.display = 'none';
     }
-  } catch (error) {
-    console.error('Ошибка загрузки данных:', error);
-  }
-}
+  });
 
-// Сохранение прогресса пользователя в базу
-function saveProgressToFirebase() {
-  const user = firebase.auth().currentUser;
-  if (user) {
-    const uid = user.uid;
-    firebase.database().ref('users/' + uid).set({
-      wood,
-      workers,
-      prestigeBonus,
-      achievements: unlockedAchievements,
-      workerPrice
-    });
-  }
-}
+  startGameBtn.addEventListener('click', (e) => {
+    if (!isLoggedIn) {
+      e.preventDefault();
+      ShowNotification('Войдите сначала в аккаунт');
+      return;
+    }
+    if (!progressLoaded) {
+      e.preventDefault();
+      ShowNotification('Прогресс еще не загружен, подождите...');
+      return;
+    }
+    window.location.href = 'menu.html';
+  });
+
+  faqBtn.addEventListener('click', () => {
+    window.location.href = 'faq.html';
+  });
+});
+
+
