@@ -37,6 +37,7 @@ loginBtn.addEventListener('click', () => {
 firebase.auth().onAuthStateChanged(user => {
   if (user) {
     welcomeMsg.textContent = `Привет, ${user.displayName}!`;
+        document.getElementById('startGameBtn').disabled = false;
     loadUserData(user.uid);
   } else {
     welcomeMsg.textContent = '';
