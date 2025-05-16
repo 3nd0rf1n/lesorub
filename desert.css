@@ -1,0 +1,317 @@
+/* Общий стиль */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: transparent;
+  color: #3b2c1a;
+  margin: 0;
+  padding: 30px;
+  text-align: center;
+  font-weight: normal;
+  line-height: 1.6;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Карточки */
+.card {
+  background: linear-gradient(135deg, #e8d3a0, #f5e4c3);
+  padding: 24px;
+  border-radius: 12px;
+  margin: 20px auto;
+  max-width: 420px;
+  box-shadow: 0 12px 24px rgba(194, 163, 104, 0.3);
+  font-size: 18px;
+  word-wrap: break-word;
+  white-space: normal;
+  color: #5c3d1a;
+  font-weight: bold;
+}
+
+/* Кнопки */
+button {
+  background-color: #d6a756;
+  border: none;
+  color: #3b2c1a;
+  padding: 12px 24px;
+  margin: 10px 5px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #c79441;
+  transform: translateY(-4px);
+}
+
+button:active {
+  transform: translateY(2px);
+}
+
+/* Простой эффект скрытия и показа */
+.hidden {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+/* Всплывающее достижение */
+.achievement-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #af8e5b;
+  padding: 16px 28px;
+  border-radius: 12px;
+  color: #fff8e1;
+  font-weight: bold;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.3s ease;
+  transform: translateY(-30px);
+  font-size: 16px;
+}
+
+.achievement-popup.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Модальное окно достижений */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  transition: opacity 0.3s ease;
+}
+
+.modal.show {
+  display: flex;
+  opacity: 1;
+}
+
+.modal-content {
+  background: #fff8e1;
+  color: #3b2c1a;
+  padding: 25px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 80%;
+  text-align: left;
+  font-size: 16px;
+  font-weight: bold;
+  word-wrap: break-word;
+  white-space: normal;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transform: translateY(-30px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal.show .modal-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.modal-content h2 {
+  font-size: 20px;
+  color: #a6783a;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.modal-content p {
+  font-size: 14px;
+  color: #5c4520;
+  line-height: 1.6;
+  font-weight: normal;
+}
+
+.modal-content .close-btn {
+  background-color: #f1d5a5;
+  color: #3b2c1a;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.modal-content .close-btn:hover {
+  background-color: #dfbe8f;
+  transform: translateY(-2px);
+}
+
+.modal-content .close-btn:active {
+  transform: translateY(2px);
+}
+
+/* Загрузочный экран */
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(218, 172, 106, 0.9);
+  color: #3b2c1a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  font-family: 'Arial', sans-serif;
+  transition: opacity 0.5s ease-out;
+}
+
+#loading-screen p {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+#progress-bar-container {
+  width: 80%;
+  height: 25px;
+  background: linear-gradient(45deg, #c29d6e, #9b7e58);
+  border-radius: 50px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(45deg, #ffb347, #ffcc33);
+  border-radius: 50px;
+  transition: width 0.3s ease-in-out;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideIn {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+}
+
+#game-content {
+  display: none;
+}
+
+.achievement-btn {
+  background-color: #d6a756;
+  border: none;
+  color: #3b2c1a;
+  padding: 12px 24px;
+  margin: 10px 5px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+}
+
+.achievement-btn:hover {
+  background-color: #c79441;
+  transform: translateY(-4px);
+}
+
+.achievement-btn:active {
+  transform: translateY(2px);
+}
+
+a.action-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #d6a756;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #3b2c1a;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+a.action-btn:hover {
+  background-color: #c79441;
+  transform: translateY(-3px);
+}
+
+#particles-js {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, #fceabb, #f8b500);
+}
+
+body.graphics-low {
+  image-rendering: pixelated;
+  filter: none;
+  font-family: 'Press Start 2P', cursive;
+}
+
+body.graphics-medium {
+  image-rendering: crisp-edges;
+  filter: none;
+  font-family: Arial, sans-serif;
+}
+
+body.graphics-high {
+  image-rendering: auto;
+  filter: none;
+  font-family: Arial, sans-serif;
+}
+
+body.graphics-low,
+body.graphics-low * {
+  font-family: 'Press Start 2P', cursive !important;
+}
+
+body.graphics-low #particles-js {
+  opacity: 0.2;
+  filter: blur(2px) brightness(0.6) contrast(0.7);
+}
+
+body.graphics-medium #particles-js {
+  opacity: 0.5;
+  filter: blur(1px) brightness(0.8) contrast(0.9);
+}
+
+body.graphics-high #particles-js {
+  opacity: 1;
+  filter: none;
+}

@@ -6,25 +6,40 @@
   <title>Меню игры</title>
   <link rel="stylesheet" href="menu.css" />
 </head>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<script>
+  // Твой Firebase config (с исправленным storageBucket)
+  const firebaseConfig = {
+    apiKey: "AIzaSyBxBkAjiy55DO7UBKltpxeagqzTIG7whSM",
+  authDomain: "an1h3lialesorub.netlify.app",
+  projectId: "lesorubik-b8937",
+  storageBucket: "lesorubik-b8937.firebasestorage.app",
+  messagingSenderId: "587896530691",
+  appId: "1:587896530691:web:bcf53cb37468ca66fd6b36",
+  measurementId: "G-0B3DH2DM1E"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+</script>
+
 <body>
   <div class="menu-container">
     <h1>Добро пожаловать в игру!</h1>
     <nav class="menu-buttons">
+      <button id="loginBtn">Войти через Google</button>
+      <span id="welcomeMsg"></span>
       <button id="startGameBtn">Начать игру</button>
       <button id="settingsBtn">Настройки</button>
       <button id="shopBtn">Магазин</button>
     </nav>
   </div>
 
- <!-- Кнопка FAQ снизу справа -->
-<button id="faqBtn" title="FAQ">FAQ</button>
-
-<script>
-  document.getElementById('faqBtn').addEventListener('click', () => {
-    window.location.href = 'faq.html';
-  });
-  
-</script>
+  <button id="faqBtn" title="FAQ">FAQ</button>
 
   <script src="menu.js"></script>
 </body>

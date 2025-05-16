@@ -1,3 +1,5 @@
+let workerPrice = parseInt(localStorage.getItem('workerPrice')) || 50;
+const workerPriceEl = document.getElementById('workerPrice');
 let wood = parseInt(localStorage.getItem('wood')) || 0;
 let workers = parseInt(localStorage.getItem('workers')) || 0;
 let prestigeBonus = parseInt(localStorage.getItem('prestigeBonus')) || 0;
@@ -45,11 +47,15 @@ function updateDisplay() {
   woodEl.textContent = wood;
   workersEl.textContent = workers;
   woodPerSecondEl.textContent = workers * (1 + prestigeBonus);
+  workerPriceEl.textContent = workerPrice; // 🔥 Добавляем отображение
+
   localStorage.setItem('wood', wood);
   localStorage.setItem('workers', workers);
+  localStorage.setItem('workerPrice', workerPrice);
   localStorage.setItem('prestigeBonus', prestigeBonus);
   localStorage.setItem('lastVisit', Date.now());
 }
+
 
 function checkAchievements() {
   achievements.forEach(a => {
@@ -96,19 +102,24 @@ chopBtn.addEventListener('click', () => {
 });
 
 buyWorkerBtn.addEventListener('click', () => {
-  if (wood >= 10) {
-    wood -= 10;
+  if (wood >= workerPrice) {
+    wood -= workerPrice;
     workers++;
+    workerPrice = Math.floor(workerPrice * 1.7); // +20% к цене
     updateDisplay();
     checkAchievements();
+  } else {
+    vementPopup("Недостаточно дерева для найма работника!");
   }
 });
+
 
 resetGameBtn.addEventListener('click', () => {
   if (wood >= 1000) {
     wood = 0;
     workers = 0;
     prestigeBonus += 1;
+    workerPrice = 50; // сброс цены
     updateDisplay();
     checkAchievements();
     vementPopup(`🔁 Престиж! Новый бонус: +${prestigeBonus}`);
@@ -192,7 +203,7 @@ setInterval(() => {
   wood += workers * (1 + prestigeBonus);
   updateDisplay();
   checkAchievements();
-}, 1000);
+}, 5000);
 
 updateDisplay();
 checkAchievements();
