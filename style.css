@@ -335,3 +335,24 @@ body.graphics-high #particles-js {
   opacity: 1;
   filter: none;
 }
+.chip {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: sienna;
+  border-radius: 3px;
+  pointer-events: none;
+  animation: flyUp 1s forwards;
+  z-index: 1000;
+}
+
+@keyframes flyUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px) rotate(360deg);
+  }
+}

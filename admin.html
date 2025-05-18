@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Админ панель</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  textarea { width: 100%; height: 150px; margin-top: 10px; }
+  button { margin: 5px 0; padding: 8px 12px; }
+</style>
+</head>
+<body>
+
+<h2>Админ панель управления пользователями</h2>
+
+<label>Введите ID пользователя (userId):</label><br />
+<input type="text" id="userIdInput" placeholder="например, user123" />
+<button id="loadUserBtn">Загрузить данные</button>
+
+<h3>Данные пользователя:</h3>
+<textarea id="userData" readonly></textarea>
+
+<button id="resetWoodBtn">Сбросить дерево (wood = 0)</button><br />
+<button id="addWoodBtn">Добавить 100 дерева</button><br />
+<button id="resetWorkersBtn">Сбросить рабочих (workers = 0)</button><br />
+<button id="addWorkerBtn">Добавить 1 рабочего</button>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+<script>
+  // TODO: Замени на свои настройки Firebase из консоли
+  const firebaseConfig = {
+    apiKey: "AIzaSyBxBkAjiy55DO7UBKltpxeagqzTIG7whSM",
+    authDomain: "lesorubik-b8937.firebaseapp.com",
+    projectId: "lesorubik-b8937",
+    storageBucket: "lesorubik-b8937.firebasestorage.app",
+    messagingSenderId: "587896530691",
+    appId: "1:587896530691:web:bcf53cb37468ca66fd6b36"
+};
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  const userIdInput = document.getElementById('userIdInput');
+  const loadUserBtn = document.getElementById('loadUserBtn');
+  const userData = document.getElementById('userData');
+  const resetWoodBtn = document.getElementById('resetWoodBtn');
+  const addWoodBtn = document.getElementById('addWoodBtn');
+  const resetWorkersBtn = document.getElementById('resetWorkersBtn');
+  const addWorkerBtn = document.getElementById('addWorkerBtn');
+
+  let currentUserDocRef = null;
+  let currentUserData = null;
+
+  loadUserBtn.onclick = async () => {
+    const userId = userIdInput.value.trim();
+    if (!userId) {
+      alert('Введите ID пользователя');
+      return;
+    }
+
+    try {
+      const docRef = db.collection('users').doc(userId);
+      const docSnap = await docRef.get();
+
+      if (!docSnap.exists) {
+        alert('Пользователь не найден!');
+        userData.value = '';
+        currentUserDocRef = null;
+        currentUserData = null;
+        return;
+      }
+
+      currentUserDocRef = docRef;
+      currentUserData = docSnap.data();
+      userData.value = JSON.stringify(currentUserData, null, 2);
+    } catch (error) {
+      alert('Ошибка загрузки данных: ' + error.message);
+    }
+  };
+
+  function updateUserData(newData) {
+    if (!currentUserDocRef) {
+      alert('Сначала загрузите пользователя');
+      return;
+    }
+    currentUserDocRef.update(newData)
+      .then(() => {
+        // Обновим локально данные и textarea
+        currentUserData = { ...currentUserData, ...newData };
+        userData.value = JSON.stringify(currentUserData, null, 2);
+        alert('Данные обновлены');
+      })
+      .catch(error => alert('Ошибка обновления: ' + error.message));
+  }
+
+  resetWoodBtn.onclick = () => {
+    updateUserData({ wood: 0 });
+  };
+
+  addWoodBtn.onclick = () => {
+    if (!currentUserData) return alert('Сначала загрузите пользователя');
+    const newWood = (currentUserData.wood || 0) + 100;
+    updateUserData({ wood: newWood });
+  };
+
+  resetWorkersBtn.onclick = () => {
+    updateUserData({ workers: 0 });
+  };
+
+  addWorkerBtn.onclick = () => {
+    if (!currentUserData) return alert('Сначала загрузите пользователя');
+    const newWorkers = (currentUserData.workers || 0) + 1;
+    updateUserData({ workers: newWorkers });
+  };
+
+</script>
+</body>
+</html>
