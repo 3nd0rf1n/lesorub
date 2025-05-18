@@ -6,29 +6,25 @@
   <title>Меню игры</title>
   <link rel="stylesheet" href="menu.css" />
 </head>
-
 <body>
-  <div id="notification-container"></div>
-
   <div class="menu-container">
     <h1>Добро пожаловать в игру!</h1>
     <nav class="menu-buttons">
-      <button id="loginBtn">Войти через Google</button>
-      <span id="welcomeMsg" class="welcome-message"></span>
       <button id="startGameBtn">Начать игру</button>
       <button id="settingsBtn">Настройки</button>
       <button id="shopBtn">Магазин</button>
     </nav>
-
-    <div class="logout-container">
-      <button id="logoutBtn" style="display:none;">Выйти из аккаунта</button>
-    </div>
   </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+ <!-- Кнопка FAQ снизу справа -->
+<button id="faqBtn" title="FAQ">FAQ</button>
+
+<script>
+  document.getElementById('faqBtn').addEventListener('click', () => {
+    window.location.href = 'faq.html';
+  });
+  
+</script>
 
   <script src="menu.js"></script>
 </body>
