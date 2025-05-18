@@ -1,15 +1,3 @@
-// Получаем или создаем userId, который привязан к устройству
-function getOrCreateUserId() {
-  let userId = localStorage.getItem('userId');
-  if (!userId) {
-    userId = 'user-' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem('userId', userId);
-  }
-  return userId;
-}
-
-const userId = getOrCreateUserId();
-
 let wood = parseInt(localStorage.getItem('wood')) || 0;
 let workers = parseInt(localStorage.getItem('workers')) || 0;
 let prestigeBonus = parseInt(localStorage.getItem('prestigeBonus')) || 0;
@@ -57,13 +45,10 @@ function updateDisplay() {
   woodEl.textContent = wood;
   workersEl.textContent = workers;
   woodPerSecondEl.textContent = workers * (1 + prestigeBonus);
-
   localStorage.setItem('wood', wood);
   localStorage.setItem('workers', workers);
   localStorage.setItem('prestigeBonus', prestigeBonus);
   localStorage.setItem('lastVisit', Date.now());
-
-  saveUserStats(userId);  // Сохраняем данные в Firestore при каждом обновлении
 }
 
 function checkAchievements() {
@@ -72,7 +57,6 @@ function checkAchievements() {
       unlockedAchievements.push(a.id);
       localStorage.setItem('achievements', JSON.stringify(unlockedAchievements));
       vementPopup(`🏆 Достижение разблокировано: ${a.name}`);
-      saveUserStats(userId);  // Сохраняем данные при разблокировке достижения
     }
   });
 }
@@ -207,7 +191,7 @@ setInterval(() => {
 updateDisplay();
 checkAchievements();
 
-// Прогресс-бар и скрытие загрузки
+// ✅ Прогресс-бар и скрытие загрузки
 document.addEventListener("DOMContentLoaded", () => {
   const loadingScreen = document.getElementById("loading-screen");
   const progressBar = document.getElementById("progress-bar");
@@ -233,91 +217,144 @@ document.addEventListener("DOMContentLoaded", () => {
 particlesJS('particles-js',
   {
     "particles": {
-      "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
-      "color": { "value": "#ffffff" },
+      "number": {
+        "value": 60,
+        "density": {
+          "enable": true,
+          "value_area": 800
+        }
+      },
+      "color": {
+        "value": "#ffffff"
+      },
       "shape": {
-        "type": "circle",
-        "stroke": { "width": 0, "color": "#000000" },
-        "polygon": { "nb_sides": 5 },
-        "image": { "src": "img/github.svg", "width": 100, "height": 100 }
+        "type": "circle"
       },
       "opacity": {
-        "value": 0.5,
-        "random": false,
-        "anim": { "enable": false, "speed": 1, "opacity_min": 0.1, "sync": false }
+        "value": 0.3
       },
       "size": {
-        "value": 3,
-        "random": true,
-        "anim": { "enable": false, "speed": 40, "size_min": 0.1, "sync": false }
+        "value": 3
       },
       "line_linked": {
         "enable": true,
         "distance": 150,
         "color": "#ffffff",
-        "opacity": 0.4,
+        "opacity": 0.2,
         "width": 1
       },
       "move": {
         "enable": true,
-        "speed": 6,
-        "direction": "none",
-        "random": false,
-        "straight": false,
-        "out_mode": "out",
-        "bounce": false,
-        "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 }
+        "speed": 2
       }
     },
     "interactivity": {
-      "detect_on": "canvas",
       "events": {
-        "onhover": { "enable": true, "mode": "repulse" },
-        "onclick": { "enable": true, "mode": "push" },
-        "resize": true
-      },
-      "modes": {
-        "grab": { "distance": 400, "line_linked": { "opacity": 1 } },
-        "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8, "speed": 3 },
-        "repulse": { "distance": 200, "duration": 0.4 },
-        "push": { "particles_nb": 4 },
-        "remove": { "particles_nb": 2 }
+        "onhover": {
+          "enable": true,
+          "mode": "repulse"
+        }
       }
     },
     "retina_detect": true
   }
 );
 
-// Инициализация Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+const music = document.getElementById("bg-music");
+const toggleBtn = document.getElementById("toggle-music");
+
+// Автовоспроизведение (по клику пользователя из-за ограничений браузеров)
+document.addEventListener("click", function autoPlayOnce() {
+  music.play();
+  document.removeEventListener("click", autoPlayOnce);
+});
+
+// Переключатель звука
+toggleBtn.addEventListener("click", () => {
+  if (music.paused) {
+    music.play();
+    toggleBtn.textContent = "🔊";
+  } else {
+    music.pause();
+    toggleBtn.textContent = "🔇";
+  }
+});
+
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  window.location.href = 'settings.html';
+});
+
+const audio = document.getElementById('bg-music');
+
+// При загрузке страницы выставляем громкость из localStorage (или 0.5 по умолчанию)
+let savedVolume = localStorage.getItem('musicVolume');
+if (savedVolume === null) savedVolume = 50;
+audio.volume = savedVolume / 100;
+
+// Если в другой вкладке изменили громкость, обновляем громкость в текущей странице
+window.addEventListener('storage', (event) => {
+  if (event.key === 'musicVolume') {
+    audio.volume = event.newValue / 100;
+  }
+});
+
+function applyGraphicsQuality() {
+  const quality = localStorage.getItem('graphicsQuality') || 'medium';
+  document.body.classList.remove('graphics-low', 'graphics-medium', 'graphics-high');
+  document.body.classList.add('graphics-' + quality);
+}
+
+applyGraphicsQuality();
+
+window.addEventListener('storage', (e) => {
+  if (e.key === 'graphicsQuality') applyGraphicsQuality();
+});
+
+let chopClicks = 0;           // счетчик кликов
+const clicksNeeded = 10;      // сколько кликов надо сделать для получения дерева
+
+chopBtn.addEventListener('click', () => {
+  chopClicks++;
+
+  if (chopClicks >= clicksNeeded) {
+    // После достижения нужного количества кликов выдаём дерево
+    const randomWood = Math.floor(Math.random() * 11);  // от 0 до 10 дерева
+    wood += randomWood + prestigeBonus;
+
+    vementPopup(`Вы получили ${randomWood} дерева!`);
+    
+    chopClicks = 0;  // сбросить счётчик
+
+    updateDisplay();
+    checkAchievements();
+  } else {
+    // Можно выводить прогресс, если хочешь
+    vementPopup(`Нажмите ещё ${clicksNeeded - chopClicks} раз(а) чтобы получить дерево`);
+  }
+});
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDdEUp-JpFCYkqflUPLjSpFyBlkn9oG-tA",
-  authDomain: "chop-tree-game-c9f5e.firebaseapp.com",
-  projectId: "chop-tree-game-c9f5e",
-  storageBucket: "chop-tree-game-c9f5e.appspot.com",
-  messagingSenderId: "953560999493",
-  appId: "1:953560999493:web:6aa45d91c63d8c52b8e461",
-  measurementId: "G-7MVDWVHN23"
+  apiKey: "AIzaSyBxBkAjiy55DO7UBKltpxeagqzTIG7whSM",
+  authDomain: "lesorubik-b8937.firebaseapp.com",
+  projectId: "lesorubik-b8937",
+  storageBucket: "lesorubik-b8937.firebasestorage.app",
+  messagingSenderId: "587896530691",
+  appId: "1:587896530691:web:bcf53cb37468ca66fd6b36"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// Инициализация Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-async function saveUserStats(userId) {
-  if (!userId) return;
-
-  try {
-    await setDoc(doc(db, "users", userId), {
-      wood,
-      workers,
-      prestigeBonus,
-      unlockedAchievements,
-      lastVisit,
-    });
-    // console.log('Данные пользователя сохранены');
-  } catch (error) {
-    console.error("Ошибка при сохранении данных:", error);
-  }
+function saveUserStats(userId) {
+  db.collection('users').doc(userId).set({
+    wood,
+    workers,
+    prestigeBonus,
+    achievements: unlockedAchievements
+  })
+  .then(() => console.log('Статистика сохранена'))
+  .catch(error => console.error('Ошибка сохранения:', error));
 }
+
+
