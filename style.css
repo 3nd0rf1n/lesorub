@@ -356,3 +356,40 @@ body.graphics-high #particles-js {
     transform: translateY(-100px) rotate(360deg);
   }
 }
+
+.game-layout {
+  display: flex;
+  height: 100vh; /* Во всю высоту окна */
+}
+
+.left-panel {
+  width: 250px;
+  background: linear-gradient(135deg, #6e7fdb, #a0a9f2); /* та же заливка как у .card */
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: white;
+}
+
+.right-panel {
+  width: 250px;
+  background: linear-gradient(135deg, #6e7fdb, #a0a9f2);
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: white;
+  border-radius: 12px;
+}
+
+/* Центр — кнопка рубки дерева */
+.center-panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

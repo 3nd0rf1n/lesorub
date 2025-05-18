@@ -28,50 +28,47 @@ document.getElementById('faqBtn').addEventListener('click', () => {
   window.location.href = 'faq.html';
 });
 
-function generateUID() {
-  // Простая функция для генерации UID (можно заменить на что-то сложнее)
-  return 'user-' + Math.random().toString(36).substr(2, 9);
+document.addEventListener('DOMContentLoaded', () => {
+  const updatePopup = document.getElementById('updatePopup');
+
+  if (!localStorage.getItem('updatePopupClosed')) {
+    updatePopup.classList.remove('hidden');
+  }
+
+  updatePopup.addEventListener('click', () => {
+    updatePopup.classList.add('hidden');
+    localStorage.setItem('updatePopupClosed', 'true');
+  });
+});
+  
+const tips = [
+  "Всегда руби дерево с умом!",
+  "Найми больше робітників для автоматичної роботи.",
+  "Улучшай панели для максимальной эффективности.",
+  "Не забывай про достижения — они дают бонусы!",
+  "Звукові ефекти роблять гру цікавішою.",
+  "Завантаження гри тепер проходить швидше.",
+];
+
+const tipElement = document.getElementById('tip');
+let currentTipIndex = 0;
+
+function showTip(index) {
+  tipElement.style.opacity = 0; // спрячем текст
+
+  setTimeout(() => {
+    tipElement.textContent = tips[index];
+    tipElement.style.opacity = 1; // покажем текст
+  }, 800); // совпадает с CSS transition
 }
 
-// Проверяем, есть ли уже uid в localStorage
-let userId = localStorage.getItem('userId');
-
-if (!userId) {
-  userId = generateUID();
-  localStorage.setItem('userId', userId);
+function nextTip() {
+  currentTipIndex = (currentTipIndex + 1) % tips.length;
+  showTip(currentTipIndex);
 }
 
-console.log('User ID для этого устройства:', userId);
+// Отобразим сразу первый совет
+showTip(currentTipIndex);
 
-// Теперь везде, где работаешь с Firebase, используй этот userId
-// Например, сохранение прогресса:
-function saveUserStats() {
-  db.collection('users').doc(userId).set({
-    wood,
-    workers,
-    prestigeBonus,
-    achievements: unlockedAchievements
-  })
-  .then(() => console.log('Данные пользователя сохранены'))
-  .catch(err => console.error('Ошибка при сохранении:', err));
-}
-
-// Аналогично загрузка данных
-function loadUserStats() {
-  db.collection('users').doc(userId).get()
-  .then(doc => {
-    if (doc.exists) {
-      const data = doc.data();
-      wood = data.wood || 0;
-      workers = data.workers || 0;
-      prestigeBonus = data.prestigeBonus || 0;
-      unlockedAchievements = data.achievements || [];
-      updateDisplay();
-      checkAchievements();
-    }
-  })
-  .catch(err => console.error('Ошибка при загрузке:', err));
-}
-
-// Вызови загрузку при старте игры
-loadUserStats();
+// Меняем совет каждые 7 секунд
+setInterval(nextTip, 7000);
