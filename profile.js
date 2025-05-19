@@ -124,21 +124,5 @@ saveNicknameBtn.addEventListener('click', function() {
   }
 });
 
-document.getElementById('exportBtn').addEventListener('click', () => {
-  const profile = {
-    nickname: localStorage.getItem('nickname') || '',
-    wood: parseInt(localStorage.getItem('wood')) || 0,
-    workers: parseInt(localStorage.getItem('workers')) || 0,
-    playedTime: parseInt(localStorage.getItem('playedTime')) || 0,
-    profileAvatar: localStorage.getItem('profileAvatar') || '',
-    profileBanner: localStorage.getItem('profileBanner') || ''
-  };
-
-  // Превратим объект в JSON и закодируем в Base64 для компактности и безопасности
-  const jsonStr = JSON.stringify(profile);
-  const base64Str = btoa(jsonStr);
-
-  document.getElementById('exportArea').value = base64Str;
-});
 
 
