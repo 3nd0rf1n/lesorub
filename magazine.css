@@ -298,3 +298,81 @@ img {
     outline: none; /* Убираем обводку при фокусе */
     -webkit-user-select: none; /* Для WebKit-браузеров */
 }
+
+@keyframes rainbow {
+  0%{background-position:0% 82%;}
+  50%{background-position:100% 19%;}
+  100%{background-position:0% 82%;}
+}
+
+.rgb-nick {
+  background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet);
+  background-size: 1400% 1400%;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow 8s ease infinite;
+}
+
+/* Основной стиль уведомления */
+.notification {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #fff;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1000;
+  display: block;
+  animation-fill-mode: forwards;
+}
+
+/* Показать уведомление с анимацией */
+.notification.show {
+  pointer-events: auto;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* Скрыть уведомление с анимацией */
+.notification.hide {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+/* Цвета для разных типов уведомлений */
+.notification.success {
+  background-color: #4caf50; /* зелёный */
+}
+
+.notification.error {
+  background-color: #f44336; /* красный */
+}
+
+.notification.info {
+  background-color: #2196f3; /* синий */
+}
+
+/* Ключевые кадры анимаций */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    bottom: 30px;
+  }
+  to {
+    opacity: 1;
+    bottom: 50px;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    bottom: 50px;
+  }
+  to {
+    opacity: 0;
+    bottom: 30px;
+  }
+}

@@ -27,12 +27,12 @@ function handleItemPurchase(price, item) {
             openChangeNicknameModal();
         }
 
-        alert('Покупка успешна!');
+        showNotification('Покупка успешна!');
 
         // Обновляем UI
         updateProfileUI();
     } else {
-        alert('У вас недостаточно дерева для покупки!');
+        showNotification('У вас недостаточно дерева для покупки!');
     }
 }
 
@@ -48,10 +48,10 @@ function saveNewNickname() {
 
     if (newNickname) {
         localStorage.setItem('nickname', newNickname);
-        alert('Ник успешно изменён!');
+        showNotification('Ник успешно изменён!');
         closeChangeNicknameModal();
     } else {
-        alert('Пожалуйста, введите новый ник!');
+        showNotification('Пожалуйста, введите новый ник!');
     }
 }
 
@@ -114,3 +114,24 @@ function createFallingCoins() {
 
 // Запуск создания монет при загрузке страницы
 createFallingCoins();
+
+    function showNotification(message, type = 'info', duration = 6000) {
+    const notification = document.getElementById('notification');
+
+    // Очистка предыдущих классов
+    notification.className = 'notification';
+
+    // Добавляем нужный тип и показываем
+    notification.textContent = message;
+    notification.classList.add(type, 'show');
+    notification.classList.remove('hidden');
+
+    // Скрыть через duration мс
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.classList.add('hidden');
+        }, 400); // Подождать завершения анимации
+    }, duration);
+}
+
