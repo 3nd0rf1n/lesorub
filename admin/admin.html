@@ -2,28 +2,11 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Админка с защитой</title>
 
 <!-- manifest для админки -->
 <link rel="manifest" href="manifest.json">
-
-<button id="installBtn" style="display: none; margin: 20px auto; display: block; padding: 10px 20px; font-size: 16px; background-color: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer;">
-  Установить приложение
-</button>
-
-
-<!-- регистрация service-worker для админки -->
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js', { scope: './' })
-      .then(reg => {
-        console.log('Admin Service Worker зарегистрирован!', reg);
-      })
-      .catch(err => {
-        console.error('Ошибка регистрации Service Worker:', err);
-      });
-  }
-</script>
 
 <style>
   body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
@@ -50,6 +33,21 @@
   #errorMsg {
     color: red; font-size: 14px; min-height: 18px;
   }
+  #installBtn {
+    display: none;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+  }
+  #installBtn:hover {
+    background-color: #45a049;
+  }
 </style>
 </head>
 <body>
@@ -63,6 +61,9 @@
     <button id="passwordSubmitBtn">Войти</button>
   </div>
 </div>
+
+<!-- Кнопка установки -->
+<button id="installBtn">Установить приложение</button>
 
 <!-- Админ-панель -->
 <div id="adminPanel">
@@ -83,7 +84,7 @@
 </div>
 
 <script>
-  // Простой пароль (без хешей)
+  // Пароль
   const CORRECT_PASSWORD = '200613a';
 
   const passwordModal = document.getElementById('passwordModal');
@@ -108,9 +109,7 @@
 
   passwordSubmitBtn.addEventListener('click', checkPassword);
   passwordInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      checkPassword();
-    }
+    if (e.key === 'Enter') checkPassword();
   });
 
   window.addEventListener('DOMContentLoaded', () => {
@@ -140,30 +139,42 @@
   });
 </script>
 
-<script>let deferredPrompt;
-const installBtn = document.getElementById('installBtn');
+<script>
+  let deferredPrompt;
+  const installBtn = document.getElementById('installBtn');
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault(); // Блокируем авто-появление баннера
-  deferredPrompt = e;
-  installBtn.style.display = 'block';
-});
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'block';
+  });
 
-installBtn.addEventListener('click', () => {
-  if (deferredPrompt) {
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) {
+      alert('Показ события установки недоступен.');
+      return;
+    }
     deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(choice => {
-      if (choice.outcome === 'accepted') {
-        console.log('Приложение установлено');
-      } else {
-        console.log('Установку отменили');
-      }
-      deferredPrompt = null;
-      installBtn.style.display = 'none';
-    });
-  }
-});
+    const choiceResult = await deferredPrompt.userChoice;
+    if (choiceResult.outcome === 'accepted') {
+      console.log('Пользователь принял установку');
+    } else {
+      console.log('Пользователь отклонил установку');
+    }
+    deferredPrompt = null;
+    installBtn.style.display = 'none';
+  });
+
+  // Регистрируем service worker после загрузки страницы
+  window.addEventListener('load', () => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(reg => console.log('Service Worker зарегистрирован', reg))
+        .catch(err => console.error('Ошибка регистрации Service Worker:', err));
+    }
+  });
 </script>
+
 
 </body>
 </html>
