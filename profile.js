@@ -125,4 +125,25 @@ saveNicknameBtn.addEventListener('click', function() {
 });
 
 
+document.addEventListener("DOMContentLoaded", () => {
+  const loadingScreen = document.getElementById("loading-screen");
+  const progressBar = document.getElementById("progress-bar");
+
+  if (!loadingScreen || !progressBar) return;
+
+  loadingScreen.style.display = "flex";
+
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += 10;
+    progressBar.style.width = `${progress}%`;
+
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        loadingScreen.style.display = "none";
+      }, 500);
+    }
+  }, 500);
+});
 
