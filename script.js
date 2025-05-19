@@ -1,5 +1,3 @@
-let workerPrice = parseInt(localStorage.getItem('workerPrice')) || 50;
-const workerPriceEl = document.getElementById('workerPrice');
 let wood = parseInt(localStorage.getItem('wood')) || 0;
 let workers = parseInt(localStorage.getItem('workers')) || 0;
 let prestigeBonus = parseInt(localStorage.getItem('prestigeBonus')) || 0;
@@ -47,15 +45,11 @@ function updateDisplay() {
   woodEl.textContent = wood;
   workersEl.textContent = workers;
   woodPerSecondEl.textContent = workers * (1 + prestigeBonus);
-  workerPriceEl.textContent = workerPrice; // 🔥 Добавляем отображение
-
   localStorage.setItem('wood', wood);
   localStorage.setItem('workers', workers);
-  localStorage.setItem('workerPrice', workerPrice);
   localStorage.setItem('prestigeBonus', prestigeBonus);
   localStorage.setItem('lastVisit', Date.now());
 }
-
 
 function checkAchievements() {
   achievements.forEach(a => {
@@ -95,31 +89,20 @@ function showAchievements() {
   achievementsModal.classList.remove('hidden');
 }
 
-chopBtn.addEventListener('click', () => {
-  wood += 1 + prestigeBonus;
-  updateDisplay();
-  checkAchievements();
-});
-
 buyWorkerBtn.addEventListener('click', () => {
-  if (wood >= workerPrice) {
-    wood -= workerPrice;
+  if (wood >= 10) {
+    wood -= 10;
     workers++;
-    workerPrice = Math.floor(workerPrice * 1.7); // +20% к цене
     updateDisplay();
     checkAchievements();
-  } else {
-    vementPopup("Недостаточно дерева для найма работника!");
   }
 });
-
 
 resetGameBtn.addEventListener('click', () => {
   if (wood >= 1000) {
     wood = 0;
     workers = 0;
     prestigeBonus += 1;
-    workerPrice = 50; // сброс цены
     updateDisplay();
     checkAchievements();
     vementPopup(`🔁 Престиж! Новый бонус: +${prestigeBonus}`);
@@ -184,7 +167,7 @@ function showConfirmationPopup(message, onConfirm, onCancel) {
 function calculateOfflineWood() {
   const now = Date.now();
   const elapsedTime = now - lastVisit;
-  const secondsElapsed = Math.floor(elapsedTime / 1000);
+  const secondsElapsed = Math.floor(elapsedTime / 15000);
   const woodPerSecond = workers * (1 + prestigeBonus);
   const accumulatedWood = woodPerSecond * secondsElapsed;
 
@@ -203,7 +186,7 @@ setInterval(() => {
   wood += workers * (1 + prestigeBonus);
   updateDisplay();
   checkAchievements();
-}, 5000);
+}, 7000);
 
 updateDisplay();
 checkAchievements();
@@ -326,3 +309,55 @@ applyGraphicsQuality();
 window.addEventListener('storage', (e) => {
   if (e.key === 'graphicsQuality') applyGraphicsQuality();
 });
+
+let chopClicks = 0;           // счетчик кликов
+const clicksNeeded = 10;      // сколько кликов надо сделать для получения дерева
+
+chopBtn.addEventListener('click', () => {
+  chopClicks++;
+
+  if (chopClicks >= clicksNeeded) {
+    // После достижения нужного количества кликов выдаём дерево
+    const randomWood = Math.floor(Math.random() * 11);  // от 0 до 10 дерева
+    wood += randomWood + prestigeBonus;
+
+    vementPopup(`Вы получили ${randomWood} дерева!`);
+    
+    chopClicks = 0;  // сбросить счётчик
+
+    updateDisplay();
+    checkAchievements();
+  } else {
+    // Можно выводить прогресс, если хочешь
+    vementPopup(`Нажмите ещё ${clicksNeeded - chopClicks} раз(а) чтобы получить дерево`);
+  }
+});
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBxBkAjiy55DO7UBKltpxeagqzTIG7whSM",
+  authDomain: "lesorubik-b8937.firebaseapp.com",
+  projectId: "lesorubik-b8937",
+  storageBucket: "lesorubik-b8937.firebasestorage.app",
+  messagingSenderId: "587896530691",
+  appId: "1:587896530691:web:bcf53cb37468ca66fd6b36"
+};
+
+// Инициализация Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+function saveUserStats(userId) {
+  db.collection('users').doc(userId).set({
+    wood,
+    workers,
+    prestigeBonus,
+    achievements: unlockedAchievements
+  })
+  .then(() => console.log('Статистика сохранена'))
+  .catch(error => console.error('Ошибка сохранения:', error));
+}
+
+document.getElementById('exitBtn').addEventListener('click', () => {
+  window.location.assign('menu.html');  // Альтернатива window.location.href
+});
+

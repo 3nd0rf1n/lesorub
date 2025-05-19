@@ -335,4 +335,121 @@ body.graphics-high #particles-js {
   opacity: 1;
   filter: none;
 }
+.chip {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: sienna;
+  border-radius: 3px;
+  pointer-events: none;
+  animation: flyUp 1s forwards;
+  z-index: 1000;
+}
 
+@keyframes flyUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px) rotate(360deg);
+  }
+}
+
+.game-layout {
+  display: flex;
+  height: 100vh; /* Во всю высоту окна */
+}
+
+.left-panel {
+  width: 250px;
+  background: linear-gradient(135deg, #6e7fdb, #a0a9f2); /* та же заливка как у .card */
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: white;
+}
+
+.right-panel {
+  width: 250px;
+  background: linear-gradient(135deg, #6e7fdb, #a0a9f2);
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: white;
+  border-radius: 12px;
+}
+
+/* Центр — кнопка рубки дерева */
+.center-panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#level-bar-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0; /* светлый фон */
+  z-index: 9999;
+}
+
+#level-bar {
+  height: 100%;
+  width: 0%;
+  background-color: #007bff; /* синий цвет */
+  transition: width 0.3s ease;
+}
+
+/* Стиль для кнопки входа в профиль */
+.profile-btn {
+  position: fixed;
+  bottom: 20px;  /* Расстояние от нижнего края */
+  right: 20px;   /* Расстояние от правого края */
+  width: 60px;   /* Ширина кнопки */
+  height: 60px;  /* Высота кнопки */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;  /* Прозрачный фон */
+  border: 2px solid #fff;         /* Белая рамка */
+  border-radius: 50%;             /* Круглая форма */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
+  transition: all 0.3s ease;      /* Плавный переход для всех свойств */
+  z-index: 1000;  /* Обеспечивает, чтобы кнопка была сверху */
+}
+
+.profile-btn img {
+  width: 35px;  /* Размер иконки внутри кнопки */
+  height: 35px;
+  object-fit: cover;  /* Обеспечивает, чтобы изображение не искажалось */
+}
+
+.profile-btn:hover {
+  border-color: #007bff; /* Цвет рамки при наведении */
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.5); /* Тень с синим оттенком при наведении */
+  cursor: pointer;  /* Указатель мыши изменится */
+}
+
+img {
+    -webkit-user-drag: none; /* Отключаем перетаскивание для вебкита (Chrome, Safari, Opera) */
+    user-select: none; /* Отключаем выделение текста и изображений */
+    outline: none; /* Убираем обводку при фокусе */
+    -webkit-user-select: none; /* Для WebKit-браузеров */
+}
+
+img {
+    -webkit-user-drag: none; /* Отключаем перетаскивание для вебкита (Chrome, Safari, Opera) */
+    user-select: none; /* Отключаем выделение текста и изображений */
+    outline: none; /* Убираем обводку при фокусе */
+    -webkit-user-select: none; /* Для WebKit-браузеров */
+}

@@ -35,35 +35,6 @@ body {
   background: #1a54d1;
 }
 
-.welcome-message {
-  display: block;
-  margin: 15px 0;
-  font-weight: 600;
-  color: #aad8ff;
-}
-
-/* Блок с кнопкой выхода */
-.logout-container {
-  margin-top: 30px;
-}
-
-#logoutBtn {
-  padding: 10px 25px;
-  border-radius: 8px;
-  background-color: #ff4d4d;
-  border: none;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 3px 8px rgba(255, 77, 77, 0.7);
-  transition: background-color 0.3s ease;
-  display: none; /* По умолчанию скрыта */
-}
-
-#logoutBtn:hover {
-  background-color: #cc3a3a;
-}
-
 /* Кнопка FAQ снизу справа */
 #faqBtn {
   position: fixed;
@@ -121,3 +92,170 @@ body {
     transform: translateX(100%);
   }
 }
+
+.faq-container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: rgba(0,0,0,0.4);
+  border-radius: 15px;
+  padding: 30px 40px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 16px;
+}
+
+.faq-container h1 {
+  margin-bottom: 25px;
+}
+
+.faq-content h3 {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #ffd54f;
+}
+
+.faq-content p {
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+
+.faq-buttons {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.faq-buttons button {
+  background: #2575fc;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(37,117,252,0.5);
+  transition: background-color 0.3s ease;
+}
+
+.faq-buttons button:hover {
+  background: #1a54d1;
+}
+
+#updatePopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;           /* Высота на весь экран */
+  width: 280px;            /* Ширина боковой панели */
+  background: rgba(50, 50, 70, 0.95);
+  padding: 30px 20px;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.4);
+  color: #eee;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  z-index: 1500;
+  overflow-y: auto;        /* Прокрутка, если контента много */
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+#updatePopup.hidden {
+  display: none;
+}
+
+#updatePopup h2 {
+  margin: 0 0 15px 0;
+  font-size: 22px;
+  font-weight: bold;
+  color: #aad4ff;
+}
+
+#updatePopup ul {
+  list-style: inside disc;
+  padding-left: 0;
+  margin: 0;
+  flex-grow: 1;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.tip-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 25px;
+  background: rgba(110, 127, 219, 0.6);
+  color: #fff;
+  font-style: italic;
+  font-size: 18px;
+  border-radius: 12px;
+  max-width: 420px;
+  box-shadow: 0 8px 16px rgba(110, 127, 219, 0.4);
+  user-select: none;
+  z-index: 10000;
+  opacity: 1;
+  transition: opacity 0.8s ease;
+  text-align: center;
+}
+
+/* Контейнер для листьев */
+.falling-leaves {
+  pointer-events: none; /* чтобы клики не блокировал */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: visible;
+  z-index: 0; /* позади контента меню */
+}
+
+/* Один лист */
+.leaf {
+  position: absolute;
+  top: -50px; /* старт выше экрана */
+  width: 30px;
+  height: 30px;
+  background-image: url('https://img.icons8.com/?size=100&id=S6rvNbebKM9i&format=png&color=000000'); /* можно заменить на свой лист */
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+  animation-name: fall, sway;
+  animation-duration: calc(10s + var(--i) * 2s), 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear, ease-in-out;
+  animation-delay: calc(var(--i) * 2s), calc(var(--i) * 2s);
+  left: calc(var(--i) * 10vw); /* разнесем по ширине */
+}
+
+/* Падение вниз */
+@keyframes fall {
+  0% {
+    top: -50px;
+    opacity: 0.8;
+  }
+  100% {
+    top: 110vh;
+    opacity: 0;
+  }
+}
+
+/* Легкое покачивание */
+@keyframes sway {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(15px) rotate(15deg);
+  }
+}
+
+img {
+    -webkit-user-drag: none; /* Отключаем перетаскивание для вебкита (Chrome, Safari, Opera) */
+    user-select: none; /* Отключаем выделение текста и изображений */
+    outline: none; /* Убираем обводку при фокусе */
+    -webkit-user-select: none; /* Для WebKit-браузеров */
+}
+

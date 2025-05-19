@@ -5,31 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Меню игры</title>
   <link rel="stylesheet" href="menu.css" />
+  <link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#0078D7" />
 </head>
 
 <body>
-  <div id="notification-container"></div>
 
   <div class="menu-container">
     <h1>Добро пожаловать в игру!</h1>
     <nav class="menu-buttons">
-      <button id="loginBtn">Войти через Google</button>
-      <span id="welcomeMsg" class="welcome-message"></span>
       <button id="startGameBtn">Начать игру</button>
       <button id="settingsBtn">Настройки</button>
       <button id="shopBtn">Магазин</button>
     </nav>
-
-    <div class="logout-container">
-      <button id="logoutBtn" style="display:none;">Выйти из аккаунта</button>
-    </div>
   </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+ <!-- Кнопка FAQ снизу справа -->
+<button id="faqBtn" title="FAQ">FAQ</button>
+
+<script>
+  document.getElementById('faqBtn').addEventListener('click', () => {
+    window.location.href = 'faq.html';
+  });
+  
+</script>
+
+<div id="tip" class="tip-container"></div>
+
+ <div id="updatePopup" class="update-popup">
+  <h2>🆕 Новое обновление</h2>
+  <h3>Версия 1.2 Alpha</h3>
+  <ul>
+    <li>Добавлен Профиль!</li>
+    <li>Исправлен баг с синим квадратиком на всех объектах!</li>
+    <li>Добавлен магазин!</li>
+    <li>Добавлена возможность сменить ник в профиле - в магазине!</li>
+    <li>Мелкие улучшеня!</li>
+  </ul>
+</div>
+
+
+
 
   <script src="menu.js"></script>
+
 </body>
 </html>
