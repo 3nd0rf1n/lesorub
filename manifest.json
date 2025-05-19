@@ -16,5 +16,8 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "additional_pages": {
+    "admin": "/admin.html" 
+  }
 }

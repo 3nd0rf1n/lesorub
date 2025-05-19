@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then((registration) => {
+        console.log('Service Worker зарегистрирован:', registration);
+      })
+      .catch((error) => {
+        console.log('Ошибка регистрации Service Worker:', error);
+      });
+  }
+</script>
+
+<meta charset="UTF-8" />
+<title>Админка с защитой</title>
+<style>
+  /* Общие стили */
+  body { 
+    font-family: 'Arial', sans-serif; 
+    background: #f4f4f9; 
+    margin: 0; 
+    padding: 0;
+    color: #333;
+  }
+
+  h3 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  /* Модальное окно для пароля */
+  #passwordModal {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 9999;
+  }
+
+  #passwordModalContent {
+    background: #fff; 
+    padding: 20px 30px; 
+    border-radius: 8px; 
+    max-width: 300px; 
+    width: 100%; 
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  #passwordInput {
+    width: 100%; 
+    padding: 10px; 
+    margin: 15px 0; 
+    font-size: 16px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+
+  #passwordInput:focus {
+    border-color: #4CAF50;
+    outline: none;
+  }
+
+  #passwordSubmitBtn {
+    padding: 10px 20px; 
+    font-size: 16px; 
+    border: none; 
+    background: #4CAF50; 
+    color: white; 
+    border-radius: 5px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  #passwordSubmitBtn:hover {
+    background-color: #45a049;
+  }
+
+  #errorMsg {
+    color: red; 
+    font-size: 14px; 
+    min-height: 18px;
+  }
+
+  /* Стиль для приветственного сообщения */
+  #greetingMessage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
+    z-index: 10000;
+    opacity: 1;
+    transition: opacity 1s ease-out;
+  }
+
+  /* Стиль для админ панели */
+  #adminPanel {
+    display: none;
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+
+  #adminPanel h3 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #555;
+  }
+
+  input[type="number"] {
+    width: 100%; 
+    padding: 10px; 
+    font-size: 16px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    transition: border-color 0.3s ease;
+  }
+
+  input[type="number"]:focus {
+    border-color: #4CAF50;
+    outline: none;
+  }
+
+  button {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+  /* Стили для кнопки сохранения */
+  #saveAdminBtn {
+    width: 100%;
+    background-color: #4CAF50;
+  }
+
+  #saveAdminBtn:hover {
+    background-color: #45a049;
+  }
+
+  /* Стили для списка ачивок */
+  #achievementsList {
+    list-style: none;
+    padding: 0;
+  }
+
+  #achievementsList li {
+    padding: 8px;
+    font-size: 16px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #achievementsList button {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #achievementsList button:hover {
+    background-color: #45a049;
+  }
+
+  #closeAchievements {
+    margin-top: 20px;
+    background-color: #f44336;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #closeAchievements:hover {
+    background-color: #d32f2f;
+  }
+</style>
+</head>
+<body>
+
+<!-- Модальное окно с паролем -->
+<div id="passwordModal">
+  <div id="passwordModalContent">
+    <h2>Введите пароль</h2>
+    <input type="password" id="passwordInput" placeholder="Пароль" autocomplete="off" />
+    <div id="errorMsg"></div>
+    <button id="passwordSubmitBtn">Войти</button>
+  </div>
+</div>
+
+<!-- Приветственное сообщение -->
+<div id="greetingMessage" style="display: none;">
+  Приветсвую, 3ndorfin
+</div>
+
+<!-- Админ-панель -->
+<div id="adminPanel">
+  <h3>Админ-панель</h3>
+
+  <!-- Форма для редактирования данных -->
+  <label>Дерево:<br>
+    <input type="number" id="adminWood" min="0" />
+  </label>
+
+  <label>Рабочие:<br>
+    <input type="number" id="adminWorkers" min="0" />
+  </label>
+
+  <label>Престиж:<br>
+    <input type="number" id="adminPrestige" min="0" />
+  </label>
+
+  <button id="saveAdminBtn">Сохранить</button>
+
+  <!-- Список ачивок -->
+  <h3>Доступные Ачивки</h3>
+  <ul id="achievementsList"></ul>
+
+  <button id="closeAchievements">Закрыть</button>
+</div>
+
+<script>
+  const passwordModal = document.getElementById('passwordModal');
+  const passwordInput = document.getElementById('passwordInput');
+  const passwordSubmitBtn = document.getElementById('passwordSubmitBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const adminPanel = document.getElementById('adminPanel');
+  const greetingMessage = document.getElementById('greetingMessage');
+  const achievementsList = document.getElementById('achievementsList');
+  const closeAchievementsBtn = document.getElementById('closeAchievements');
+
+  // Пароль для доступа
+  const CORRECT_PASSWORD = '200613a';
+
+  function checkPassword() {
+    const entered = passwordInput.value;
+    if (entered === CORRECT_PASSWORD) {
+      sessionStorage.setItem('adminAuthorized', 'true');
+      passwordModal.style.display = 'none';
+      greetingMessage.style.display = 'flex';  // Показываем приветствие
+      setTimeout(() => {
+        greetingMessage.style.opacity = 0;  // Начинаем плавно исчезать
+        setTimeout(() => {
+          greetingMessage.style.display = 'none'; // Полностью скрываем после исчезновения
+          adminPanel.style.display = 'block'; // Показываем админ-панель
+          fillAdminPanel();
+        }, 1000); // Ждем 1 секунду, пока исчезает
+      }, 2000); // Ждем 2 секунды перед началом исчезновения
+    } else {
+      errorMsg.textContent = 'Неверный пароль. Попробуйте снова.';
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
+  }
+
+  passwordSubmitBtn.addEventListener('click', checkPassword);
+  passwordInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      checkPassword();
+    }
+  });
+
+  // Функция для заполнения админ-панели
+  function fillAdminPanel() {
+    document.getElementById('adminWood').value = localStorage.getItem('wood') || 0;
+    document.getElementById('adminWorkers').value = localStorage.getItem('workers') || 0;
+    document.getElementById('adminPrestige').value = localStorage.getItem('prestige') || 0;
+    loadAchievements();
+  }
+
+  // Загружаем ачивки
+  function loadAchievements() {
+    const achievements = JSON.parse(localStorage.getItem('achievements')) || [];
+
+    const allAchievements = [
+      { id: 'firstClick', name: 'Перший удар' },
+      { id: 'tenWood', name: '10 дерева!' },
+      { id: 'firstWorker', name: 'Перший робітник' },
+      { id: 'prestige1', name: 'Перший престиж' },
+      { id: 'wood100', name: '100 дерева' },
+      { id: 'wood500', name: '500 дерева' },
+      { id: 'wood1k', name: '1000 дерева' },
+      { id: 'wood10k', name: '10 000 дерева' },
+      { id: 'wood100k', name: '100 000 дерева' },
+      { id: 'worker5', name: '5 робітників' },
+      { id: 'worker10', name: '10 робітників' },
+      { id: 'worker50', name: '50 робітників' },
+      { id: 'worker100', name: '100 робітників' },
+      { id: 'worker500', name: '500 робітників' },
+      { id: 'prestige5', name: '5 престижів' },
+      { id: 'prestige10', name: '10 престижів' },
+      { id: 'prestige50', name: '50 престижів' },
+      { id: 'prestige100', name: '100 престижів' },
+      { id: 'woodPerSecond10', name: '10 дерева в сек' },
+      { id: 'woodPerSecond100', name: '100 дерева в сек' },
+      { id: 'woodPerSecond500', name: '500 дерева в сек' },
+      { id: 'clickNothing', name: 'Нічого не сталося' },
+      { id: 'overkill', name: 'Більше ніж потрібно' },
+      { id: 'lazy', name: 'Нехай інші працюють' }
+    ];
+
+    achievementsList.innerHTML = '';  // Очистить список
+    allAchievements.forEach(a => {
+      const li = document.createElement("li");
+      li.textContent = `${a.name} ${achievements.includes(a.id) ? "✅" : "❌"}`;
+
+      // Добавим кнопку для изменения статуса ачивки
+      const button = document.createElement('button');
+      button.textContent = achievements.includes(a.id) ? 'Снять' : 'Получить';
+      button.addEventListener('click', () => toggleAchievement(a.id));
+
+      li.appendChild(button);
+      achievementsList.appendChild(li);
+    });
+  }
+
+  // Функция для изменения статуса ачивки
+  function toggleAchievement(id) {
+    let achievements = JSON.parse(localStorage.getItem('achievements')) || [];
+
+    if (achievements.includes(id)) {
+      achievements = achievements.filter(a => a !== id);
+    } else {
+      achievements.push(id);
+    }
+
+    localStorage.setItem('achievements', JSON.stringify(achievements));
+    loadAchievements();  // Перезагружаем список ачивок
+  }
+
+  document.getElementById('saveAdminBtn').addEventListener('click', () => {
+    const wood = parseInt(document.getElementById('adminWood').value) || 0;
+    const workers = parseInt(document.getElementById('adminWorkers').value) || 0;
+    const prestige = parseInt(document.getElementById('adminPrestige').value) || 0;
+
+    localStorage.setItem('wood', wood);
+    localStorage.setItem('workers', workers);
+    localStorage.setItem('prestige', prestige);
+
+    alert('Данные успешно сохранены!');
+  });
+
+  document.getElementById("closeAchievements").addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
+</script>
+
+</body>
+</html>
