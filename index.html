@@ -44,16 +44,6 @@
   </ul>
 </div>
 
-<script>// Регистрация service worker
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker-game.js')
-      .then(reg => console.log('✅ Service Worker зарегистрирован:', reg.scope))
-      .catch(err => console.error('❌ Ошибка при регистрации Service Worker:', err));
-  });
-}
-</script>
-
 
 
 

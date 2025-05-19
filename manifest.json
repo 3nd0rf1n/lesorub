@@ -1,7 +1,7 @@
 {
-  "name": "Lesorub",
-  "short_name": "Lesorub",
-  "start_url": "/index.html",
+  "name": "Lesorub by 3ndorfin",
+  "short_name": "test",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#222222",
   "theme_color": "#0078D7",
