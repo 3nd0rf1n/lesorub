@@ -2,14 +2,14 @@
 <html lang="ru">
 <head>
 
-  <script>
+<script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then((registration) => {
-        console.log('Service Worker зарегистрирован:', registration);
+    navigator.serviceWorker.register('/admin/service-worker-admin.js')
+      .then(registration => {
+        console.log('Service Worker для админки зарегистрирован', registration);
       })
-      .catch((error) => {
-        console.log('Ошибка регистрации Service Worker:', error);
+      .catch(error => {
+        console.log('Ошибка регистрации Service Worker для админки:', error);
       });
   }
 </script>
