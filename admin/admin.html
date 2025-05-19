@@ -7,6 +7,11 @@
 <!-- manifest для админки -->
 <link rel="manifest" href="manifest.json">
 
+<button id="installBtn" style="display: none; margin: 20px auto; display: block; padding: 10px 20px; font-size: 16px; background-color: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+  Установить приложение
+</button>
+
+
 <!-- регистрация service-worker для админки -->
 <script>
   if ('serviceWorker' in navigator) {
@@ -133,6 +138,31 @@
 
     alert('Данные успешно сохранены!');
   });
+</script>
+
+<script>let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault(); // Блокируем авто-появление баннера
+  deferredPrompt = e;
+  installBtn.style.display = 'block';
+});
+
+installBtn.addEventListener('click', () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice => {
+      if (choice.outcome === 'accepted') {
+        console.log('Приложение установлено');
+      } else {
+        console.log('Установку отменили');
+      }
+      deferredPrompt = null;
+      installBtn.style.display = 'none';
+    });
+  }
+});
 </script>
 
 </body>
