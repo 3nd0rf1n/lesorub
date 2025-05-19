@@ -1,0 +1,300 @@
+/* Общий стиль */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden; /* Убираем прокрутку */
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #6a11cb, #2575fc); /* Яркий градиент с фиолетовым и синим */
+    color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 0;
+    background-attachment: fixed;
+    background-position: center; /* Центрируем фон */
+    background-size: cover; /* Обеспечиваем полное покрытие фоном */
+    position: relative;
+}
+
+/* Падающие монетки */
+.coin {
+    position: absolute;
+    top: -10%;
+    width: 30px;
+    height: 30px;
+    background-image: url('https://img.icons8.com/?size=100&id=sPBQkuep9vDA&format=png&color=000000');
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: fall 12s linear infinite, spin 5s ease-in-out infinite;
+    opacity: 0.8;
+}
+
+/* Анимация падения монет */
+@keyframes fall {
+    0% {
+        top: -10%;
+        left: calc(10% + (90% * random()));
+    }
+    100% {
+        top: 110%;
+    }
+}
+
+/* Анимация вращения монет */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Контейнер магазина */
+.shop-container {
+    background: rgba(0, 0, 0, 0.6); /* Полупрозрачный черный фон для контраста */
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 900px;
+    padding: 40px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    margin-top: 50px;
+}
+
+/* Заголовок магазина */
+.shop-header {
+    margin-bottom: 40px;
+}
+
+.shop-header h1 {
+    font-size: 52px;
+    color: #fff;
+    margin-bottom: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.shop-header p {
+    font-size: 22px;
+    color: #d1e8ff;
+    font-weight: 500;
+}
+
+/* Информация о балансе дерева */
+.profile-info {
+    font-size: 22px;
+    margin-bottom: 40px;
+    color: #d1e8ff;
+    font-weight: 600;
+}
+
+/* Секция с товарами */
+.shop-items {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Индивидуальный товар в магазине */
+.shop-item {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+    font-family: 'Roboto', sans-serif;
+}
+
+.shop-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Содержание товара */
+.item-content {
+    text-align: left;
+}
+
+/* Заголовок товара */
+.item-title {
+    font-size: 30px;
+    color: #4a90e2;
+    font-weight: 600;
+}
+
+/* Цена товара */
+.item-price {
+    font-size: 22px;
+    color: #444;
+}
+
+/* Кнопка покупки */
+.buy-btn {
+    background-color: #4a90e2;
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    padding: 14px 35px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease-in-out;
+}
+
+.buy-btn:hover {
+    background-color: #2f7cb1;
+}
+
+.buy-btn:active {
+    transform: scale(0.98);
+}
+
+/* Модальные окна */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    width: 450px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.modal-content h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #4a90e2;
+    font-weight: 700;
+}
+
+.modal-content p {
+    font-size: 20px;
+    margin-bottom: 25px;
+    color: #444;
+}
+
+.modal-content input {
+    padding: 14px;
+    font-size: 20px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.modal-content .btn {
+    background-color: #4a90e2;
+    color: white;
+    padding: 15px 30px;
+    font-size: 20px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease-in-out;
+}
+
+.modal-content .btn:hover {
+    background-color: #2f7cb1;
+}
+
+.modal-content .btn:active {
+    transform: scale(0.98);
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Кнопка выхода */
+.logout-btn {
+    display: inline-block;
+    position: absolute;
+    left: 20px; /* Отступ слева */
+    bottom: 20px; /* Отступ снизу */
+    border: none;
+    background: none; /* Убираем фон */
+    padding: 0; /* Убираем отступы */
+    cursor: pointer;
+}
+
+.logout-btn img {
+    width: 60px;  /* Размер картинки */
+    height: auto;  /* Пропорции сохраняются */
+    transition: transform 0.1s ease-in-out;
+}
+
+.logout-btn:hover img {
+    transform: scale(1.05); /* Увеличиваем картинку при наведении */
+}
+
+.logout-btn:active img {
+    transform: scale(0.98); /* Уменьшаем картинку при клике */
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 600px) {
+    .logout-btn {
+        left: 10px; /* Меньше отступ слева */
+        bottom: 10px; /* Меньше отступ снизу */
+    }
+
+    .logout-btn img {
+        width: 80px; /* Уменьшаем картинку на мобильных */
+    }
+}
+
+img {
+    -webkit-user-drag: none; /* Отключаем перетаскивание для вебкита (Chrome, Safari, Opera) */
+    user-select: none; /* Отключаем выделение текста и изображений */
+    outline: none; /* Убираем обводку при фокусе */
+    -webkit-user-select: none; /* Для WebKit-браузеров */
+}
+
+img {
+    -webkit-user-drag: none; /* Отключаем перетаскивание для вебкита (Chrome, Safari, Opera) */
+    user-select: none; /* Отключаем выделение текста и изображений */
+    outline: none; /* Убираем обводку при фокусе */
+    -webkit-user-select: none; /* Для WebKit-браузеров */
+}

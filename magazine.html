@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин профиля</title>
+    <link rel="stylesheet" href="magazine.css">
+</head>
+<body>
+
+    <!-- Контейнер для всего магазина -->
+    <div class="shop-container">
+        
+        <!-- Заголовок магазина -->
+        <header class="shop-header">
+            <h1>Магазин профиля</h1>
+            <p>Используйте дерево для покупки товаров</p>
+        </header>
+
+        <!-- Баланс дерева -->
+        <div class="profile-info">
+            <p>Ваш баланс дерева: <span id="profileWood">0</span> 🪵</p>
+        </div>
+
+        <!-- Товары магазина -->
+        <section class="shop-items">
+            <!-- Товар: Сменить ник -->
+            <div class="shop-item">
+                <div class="item-content">
+                    <h2 class="item-title">Изменить ник</h2>
+                    <p class="item-price">Цена: 200 дерева</p>
+                </div>
+                <button class="buy-btn" id="changeNicknameBtn">Купить</button>
+            </div>
+        </section>
+        
+
+        <!-- Модальные окна -->
+        <div class="modal" id="changeNicknameModal">
+            <div class="modal-content">
+                <h2>Введите новый ник</h2>
+                <input type="text" id="newNicknameInput" placeholder="Ваш новый ник" />
+                <div class="modal-actions">
+                    <button id="saveNewNicknameBtn" class="btn">Сохранить</button>
+                    <button id="cancelChangeNicknameBtn" class="btn">Отмена</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальные окна для успешной покупки -->
+        <div class="modal" id="successModal">
+            <div class="modal-content">
+                <h2>Покупка успешна!</h2>
+                <p>Вы успешно приобрели товар.</p>
+                <button id="closeSuccessModalBtn" class="btn">Закрыть</button>
+            </div>
+        </div>
+
+        <!-- Модальные окна для ошибки (недостаточно дерева) -->
+        <div class="modal" id="errorModal">
+            <div class="modal-content">
+                <h2>Ошибка</h2>
+                <p>У вас недостаточно дерева для покупки.</p>
+                <button id="closeErrorModalBtn" class="btn">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="fallingCoins"></div> <!-- Контейнер для падающих монет -->
+
+   <a href="profile.html" class="logout-btn">
+    <img src="icons/logout-icon.png" alt="Exit">
+</a>
+
+    <script src="magazine.js"></script>
+</body>
+</html>
