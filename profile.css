@@ -1,0 +1,399 @@
+/* Общий фон */
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  color: #222;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Чтобы фон не "просвечивал" */
+  overflow-x: hidden;
+}
+
+/* Баннер */
+.banner-container {
+  width: 100%;
+  height: 160px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 24px;
+  box-sizing: border-box;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  box-shadow:
+    0 4px 15px rgba(118, 75, 162, 0.6),
+    inset 0 -3px 12px rgba(255, 255, 255, 0.15);
+  position: relative;
+  transition: background 0.4s ease;
+  cursor: default;
+  z-index: 10; /* Чтобы баннер всегда был сверху */
+}
+
+.banner-container:hover {
+  background: linear-gradient(90deg, #7a83f7 0%, #8960bc 100%);
+}
+
+/* Кнопки баннера */
+.banner-container button {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 30px;
+  color: white;
+  font-weight: 600;
+  padding: 9px 22px;
+  margin-left: 14px;
+  cursor: pointer;
+  font-size: 15px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.banner-container button:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.7);
+}
+
+/* Контейнер профиля */
+.profile-container {
+  max-width: 900px;
+  margin: 30px auto 50px; /* Отступ сверху для баннера */
+  background: white;
+  display: flex;
+  align-items: center;
+  border-radius: 28px;
+  box-shadow:
+    0 12px 40px rgba(118, 75, 162, 0.15);
+  padding: 30px 40px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 5;
+  /* Чтобы профиль не просвечивал */
+  overflow: hidden;
+}
+
+/* Аватар */
+.avatar-container {
+  width: 150px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* Аватарка с эффектом свечения */
+.avatar-container img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #764ba2;
+  box-shadow:
+    0 0 18px rgba(118, 75, 162, 0.8),
+    0 0 30px rgba(118, 75, 162, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.avatar-container img:hover {
+  transform: scale(1.05);
+}
+
+/* Контейнер кнопок под аватаром */
+.avatar-container > div {
+  margin-top: 18px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Кнопки аватара */
+.avatar-container button {
+  background: #764ba2;
+  border: none;
+  border-radius: 24px;
+  color: white;
+  font-weight: 700;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 15px;
+  letter-spacing: 0.05em;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+  box-shadow: 0 0 15px rgba(118, 75, 162, 0.6);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.avatar-container button:hover {
+  background-color: #8960bc;
+  box-shadow: 0 0 25px rgba(137, 96, 188, 0.8);
+}
+
+/* Информация профиля */
+.profile-info {
+  flex-grow: 1;
+  margin-left: 44px;
+  font-size: 22px;
+  color: #4b4b4b;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+/* Отдельные строки профиля */
+.profile-info p {
+  margin: 0;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  user-select: none;
+}
+
+@media (max-width: 600px) {
+  /* Контейнер профиля становится вертикальным */
+  .profile-container {
+    flex-direction: column;
+    padding: 20px;
+    max-width: 90vw;
+    margin: 0 auto;
+  }
+
+  /* Аватарка уменьшится и центрируется */
+  .avatar-container {
+    margin-bottom: 24px;
+    width: 120px;
+    align-self: center;
+  }
+
+  .avatar-container img {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* Кнопки под аватаркой в ряд по центру */
+  .avatar-container > div {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  /* Информация по центру и чуть крупнее */
+  .profile-info {
+    margin-left: 0;
+    text-align: center;
+    font-size: 18px;
+  }
+
+  /* Баннер тоже адаптив */
+  .banner-container {
+    width: 100vw;
+  }
+}
+
+.banner-container {
+  position: relative;
+  width: 100%;
+  height: 150px; /* высота баннера */
+  background-color: #333;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Контейнер кнопок, абсолютное позиционирование внизу справа */
+.banner-container button {
+  position: absolute;
+  bottom: 8px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.banner-container button:hover {
+  opacity: 1;
+}
+
+/* Позиционируем отдельно каждую кнопку */
+#uploadBannerBtn {
+  right: 48px; /* слева от кнопки удаления */
+}
+
+#removeBannerBtn {
+  right: 8px;
+}
+
+.banner-container button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+#exitBtn {
+  position: fixed;
+  bottom: 16px;  /* Расположение от нижнего края */
+  left: 16px;    /* Расположение от левого края */
+  width: 40px;   /* Размер кнопки */
+  height: 40px;  /* Размер кнопки */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+  z-index: 1000; /* Чтобы кнопка была поверх всех остальных элементов */
+}
+
+#exitBtn:hover {
+  opacity: 1; /* Увеличиваем видимость кнопки при наведении */
+}
+
+#exitBtn img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark-theme {
+  background-color: #333;
+  color: #fff;
+}
+
+.light-theme {
+  background-color: #fff;
+  color: #000;
+}
+
+/* Стиль модального окна */
+.modal {
+  display: none; /* Скрыто по умолчанию */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Полупрозрачный черный фон */
+  z-index: 1000; /* Чтобы окно было поверх всего остального */
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease; /* Плавное появление */
+}
+
+.modal-content {
+  background: #fff; /* Белый фон для контента */
+  padding: 30px;
+  border-radius: 10px; /* Сглаженные углы */
+  width: 300px; /* Устанавливаем ширину окна */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Тень вокруг окна */
+  text-align: center;
+  animation: slideUp 0.3s ease-out; /* Анимация появления */
+}
+
+/* Анимация для модального окна */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Стиль заголовка в модальном окне */
+.modal-content h2 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Стиль для текстового поля */
+#nicknameInput {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+#nicknameInput:focus {
+  border-color: #007BFF; /* Синий цвет при фокусе */
+}
+
+/* Стиль для кнопки */
+#saveNicknameBtn {
+  background-color: #007BFF; /* Синий фон */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#saveNicknameBtn:hover {
+  background-color: #0056b3; /* Темный синий при наведении */
+}
+
+img {
+    -webkit-user-drag: none; /* Отключаем перетаскивание для вебкита (Chrome, Safari, Opera) */
+    user-select: none; /* Отключаем выделение текста и изображений */
+    outline: none; /* Убираем обводку при фокусе */
+    -webkit-user-select: none; /* Для WebKit-браузеров */
+}
+
+/* Стили для кнопки перехода в магазин */
+.go-to-magazine-btn {
+    position: fixed;
+    bottom: 20px; /* Отступ снизу */
+    right: 20px; /* Отступ справа */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 100; /* Чтобы кнопка была поверх других элементов */
+}
+
+.go-to-magazine-btn img {
+    width: 35px; /* Уменьшаем размер кнопки */
+    height: 35px;
+    border-radius: 50%;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Эффект при наведении на кнопку */
+.go-to-magazine-btn:hover img {
+    transform: scale(1.1); /* Увеличиваем кнопку при наведении */
+}
+
+img {
+    -webkit-user-drag: none; /* Отключаем перетаскивание для вебкита (Chrome, Safari, Opera) */
+    user-select: none; /* Отключаем выделение текста и изображений */
+    outline: none; /* Убираем обводку при фокусе */
+    -webkit-user-select: none; /* Для WebKit-браузеров */
+}

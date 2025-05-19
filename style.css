@@ -393,3 +393,63 @@ body.graphics-high #particles-js {
   align-items: center;
 }
 
+#level-bar-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0; /* светлый фон */
+  z-index: 9999;
+}
+
+#level-bar {
+  height: 100%;
+  width: 0%;
+  background-color: #007bff; /* синий цвет */
+  transition: width 0.3s ease;
+}
+
+/* Стиль для кнопки входа в профиль */
+.profile-btn {
+  position: fixed;
+  bottom: 20px;  /* Расстояние от нижнего края */
+  right: 20px;   /* Расстояние от правого края */
+  width: 60px;   /* Ширина кнопки */
+  height: 60px;  /* Высота кнопки */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;  /* Прозрачный фон */
+  border: 2px solid #fff;         /* Белая рамка */
+  border-radius: 50%;             /* Круглая форма */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
+  transition: all 0.3s ease;      /* Плавный переход для всех свойств */
+  z-index: 1000;  /* Обеспечивает, чтобы кнопка была сверху */
+}
+
+.profile-btn img {
+  width: 35px;  /* Размер иконки внутри кнопки */
+  height: 35px;
+  object-fit: cover;  /* Обеспечивает, чтобы изображение не искажалось */
+}
+
+.profile-btn:hover {
+  border-color: #007bff; /* Цвет рамки при наведении */
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.5); /* Тень с синим оттенком при наведении */
+  cursor: pointer;  /* Указатель мыши изменится */
+}
+
+img {
+    -webkit-user-drag: none; /* Отключаем перетаскивание для вебкита (Chrome, Safari, Opera) */
+    user-select: none; /* Отключаем выделение текста и изображений */
+    outline: none; /* Убираем обводку при фокусе */
+    -webkit-user-select: none; /* Для WebKit-браузеров */
+}
+
+img {
+    -webkit-user-drag: none; /* Отключаем перетаскивание для вебкита (Chrome, Safari, Opera) */
+    user-select: none; /* Отключаем выделение текста и изображений */
+    outline: none; /* Убираем обводку при фокусе */
+    -webkit-user-select: none; /* Для WebKit-браузеров */
+}

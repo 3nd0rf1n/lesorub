@@ -10,9 +10,12 @@ document.getElementById('faqBtn').addEventListener('click', () => {
   showNotification(faqText);
 });
 
-document.getElementById('startGameBtn').addEventListener('click', () => {
-  window.location.href = 'menu.html';
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('startGameBtn').addEventListener('click', () => {
+    window.location.href = 'menu.html';
+  });
 });
+
 
 document.getElementById('settingsBtn').addEventListener('click', () => {
   window.location.href = 'settings.html';
@@ -72,3 +75,4 @@ showTip(currentTipIndex);
 
 // Меняем совет каждые 7 секунд
 setInterval(nextTip, 7000);
+

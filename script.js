@@ -357,4 +357,7 @@ function saveUserStats(userId) {
   .catch(error => console.error('Ошибка сохранения:', error));
 }
 
+document.getElementById('exitBtn').addEventListener('click', () => {
+  window.location.assign('menu.html');  // Альтернатива window.location.href
+});
 

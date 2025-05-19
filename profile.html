@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Профиль</title>
+  <link rel="stylesheet" href="profile.css" />
+</head>
+<body>
+
+
+
+  <!-- Модальное окно для ввода ника -->
+  <div class="modal" id="nicknameModal">
+    <div class="modal-content">
+      <h2>Введите ваш ник</h2>
+      <input type="text" id="nicknameInput" placeholder="Ваш ник" />
+      <button id="saveNicknameBtn">Сохранить</button>
+    </div>
+  </div>
+
+  <div class="header-container">
+    <!-- Баннер -->
+    <div class="banner-container" id="bannerContainer">
+      <button id="uploadBannerBtn" type="button" title="Загрузить баннер">
+        <img src="icons/upload-icon.png" alt="Загрузить" />
+      </button>
+      <button id="removeBannerBtn" type="button" title="Удалить баннер">
+        <img src="icons/remove-icon.png" alt="Удалить" />
+      </button>
+      <input type="file" id="bannerInput" accept="image/*" style="display:none" />
+    </div>
+
+    <!-- Аватар и профиль -->
+    <div class="profile-container">
+      <div class="avatar-container" id="avatarContainer">
+        <img id="avatarImg" src="https://via.placeholder.com/150?text=Аватар" alt="Аватар" />
+        <div class="avatar-controls">
+          <button id="uploadAvatarBtn" type="button">Загрузить аватар</button>
+          <button id="removeAvatarBtn" type="button">Удалить аватар</button>
+          <input type="file" id="avatarInput" accept="image/*" style="display:none" />
+        </div>
+      </div>
+
+      <div class="profile-info">
+        <p>Ник: <span id="profileNickname">Не установлен</span></p>
+        <p>Дерево: <span id="profileWood">0</span></p>
+        <p>👷 Работники: <span id="profileWorkers">0</span></p>
+        <p>Время игры: <span id="profilePlayedTime">00:00:00</span></p>
+      </div>
+    </div>
+  </div>
+
+  <a href="menu.html" id="exitBtn">
+    <img src="icons/exit-icon.png" alt="Exit" />
+  </a>
+
+  <!-- Кнопка перехода на магазин -->
+<a href="magazine.html" id="goToMagazineBtn" class="go-to-magazine-btn">
+    <img src="icons/magazine-icon.png" alt="Перейти в магазин">
+</a>
+
+  <script src="profile.js"></script>
+</body>
+</html>
