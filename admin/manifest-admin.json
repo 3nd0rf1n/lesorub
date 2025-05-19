@@ -1,20 +1,20 @@
 {
   "name": "Админка",
   "short_name": "Админка",
-  "start_url": "admin.html",
+  "start_url": "./admin.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4caf50",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "icons/admin-icon-192.png",
       "sizes": "192x192",
-      "type": "admin-icon-192.png"
+      "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "icons/admin-icon-512.png",
       "sizes": "512x512",
-      "type": "admin-icon-512.png"
+      "type": "image/png"
     }
   ]
 }

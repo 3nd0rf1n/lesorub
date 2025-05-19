@@ -1,180 +1,68 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Админка с защитой</title>
-
-<!-- manifest для админки -->
-<link rel="manifest" href="manifest.json">
-
-<style>
-  body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-  #adminPanel { display: none; max-width: 320px; margin: 30px auto; padding: 15px; border: 2px solid #444; border-radius: 8px; background: #f7f7f7; box-shadow: 0 2px 6px rgba(0,0,0,0.1);}
-  #passwordModal {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.7);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 9999;
-  }
-  #passwordModalContent {
-    background: white; padding: 20px 30px; border-radius: 8px; max-width: 300px; width: 100%; text-align: center;
-  }
-  #passwordInput {
-    width: 100%; padding: 10px; margin: 15px 0; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;
-  }
-  #passwordSubmitBtn {
-    padding: 10px 20px; font-size: 16px; border: none; background: #4caf50; color: white; border-radius: 5px; cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  #passwordSubmitBtn:hover {
-    background-color: #45a049;
-  }
-  #errorMsg {
-    color: red; font-size: 14px; min-height: 18px;
-  }
-  #installBtn {
-    display: none;
-    margin: 20px auto;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: block;
-  }
-  #installBtn:hover {
-    background-color: #45a049;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>Админка PWA</title>
+  
+  <link rel="manifest" href="manifest-admin.json" />
+  <meta name="theme-color" content="#4caf50" />
+  
+  <style>
+    #install-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+  </style>
 </head>
 <body>
+  <h1>Добро пожаловать в Админку</h1>
+  <p>Это PWA страница админки.</p>
 
-<!-- Модальное окно с паролем -->
-<div id="passwordModal">
-  <div id="passwordModalContent">
-    <h2>Введите пароль</h2>
-    <input type="password" id="passwordInput" placeholder="Пароль" autocomplete="off" />
-    <div id="errorMsg"></div>
-    <button id="passwordSubmitBtn">Войти</button>
-  </div>
-</div>
+  <button id="install-btn">Установить приложение</button>
 
-<!-- Кнопка установки -->
-<button id="installBtn">Установить приложение</button>
+  <script>
+    let deferredPrompt;
+    const installBtn = document.getElementById('install-btn');
 
-<!-- Админ-панель -->
-<div id="adminPanel">
-  <h3>Админ-панель</h3>
-  <label>Дерево:<br>
-    <input type="number" id="adminWood" min="0" />
-  </label><br><br>
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'inline-block';
+    });
 
-  <label>Рабочие:<br>
-    <input type="number" id="adminWorkers" min="0" />
-  </label><br><br>
+    installBtn.addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(choice => {
+          if (choice.outcome === 'accepted') {
+            console.log('Пользователь установил приложение');
+          } else {
+            console.log('Пользователь отклонил установку');
+          }
+          deferredPrompt = null;
+          installBtn.style.display = 'none';
+        });
+      }
+    });
 
-  <label>Престиж:<br>
-    <input type="number" id="adminPrestige" min="0" />
-  </label><br><br>
-
-  <button id="saveAdminBtn">Сохранить</button>
-</div>
-
-<script>
-  // Пароль
-  const CORRECT_PASSWORD = '200613a';
-
-  const passwordModal = document.getElementById('passwordModal');
-  const passwordInput = document.getElementById('passwordInput');
-  const passwordSubmitBtn = document.getElementById('passwordSubmitBtn');
-  const errorMsg = document.getElementById('errorMsg');
-  const adminPanel = document.getElementById('adminPanel');
-
-  function checkPassword() {
-    const entered = passwordInput.value;
-    if (entered === CORRECT_PASSWORD) {
-      sessionStorage.setItem('adminAuthorized', 'true');
-      passwordModal.style.display = 'none';
-      adminPanel.style.display = 'block';
-      fillAdminPanel();
-    } else {
-      errorMsg.textContent = 'Неверный пароль. Попробуйте снова.';
-      passwordInput.value = '';
-      passwordInput.focus();
-    }
-  }
-
-  passwordSubmitBtn.addEventListener('click', checkPassword);
-  passwordInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') checkPassword();
-  });
-
-  window.addEventListener('DOMContentLoaded', () => {
-    if (sessionStorage.getItem('adminAuthorized') === 'true') {
-      passwordModal.style.display = 'none';
-      adminPanel.style.display = 'block';
-      fillAdminPanel();
-    }
-  });
-
-  function fillAdminPanel() {
-    document.getElementById('adminWood').value = localStorage.getItem('wood') || 0;
-    document.getElementById('adminWorkers').value = localStorage.getItem('workers') || 0;
-    document.getElementById('adminPrestige').value = localStorage.getItem('prestige') || 0;
-  }
-
-  document.getElementById('saveAdminBtn').addEventListener('click', () => {
-    const wood = parseInt(document.getElementById('adminWood').value) || 0;
-    const workers = parseInt(document.getElementById('adminWorkers').value) || 0;
-    const prestige = parseInt(document.getElementById('adminPrestige').value) || 0;
-
-    localStorage.setItem('wood', wood);
-    localStorage.setItem('workers', workers);
-    localStorage.setItem('prestige', prestige);
-
-    alert('Данные успешно сохранены!');
-  });
-</script>
-
-<script>
-  let deferredPrompt;
-  const installBtn = document.getElementById('installBtn');
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = 'block';
-  });
-
-  installBtn.addEventListener('click', async () => {
-    if (!deferredPrompt) {
-      alert('Показ события установки недоступен.');
-      return;
-    }
-    deferredPrompt.prompt();
-    const choiceResult = await deferredPrompt.userChoice;
-    if (choiceResult.outcome === 'accepted') {
-      console.log('Пользователь принял установку');
-    } else {
-      console.log('Пользователь отклонил установку');
-    }
-    deferredPrompt = null;
-    installBtn.style.display = 'none';
-  });
-
-  // Регистрируем service worker после загрузки страницы
-  window.addEventListener('load', () => {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(reg => console.log('Service Worker зарегистрирован', reg))
-        .catch(err => console.error('Ошибка регистрации Service Worker:', err));
+      navigator.serviceWorker.register('service-worker-admin.js')
+        .then(() => console.log('Service Worker зарегистрирован'))
+        .catch(console.error);
     }
-  });
-</script>
-
-
+  </script>
 </body>
 </html>
