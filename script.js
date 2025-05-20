@@ -319,7 +319,15 @@ chopBtn.addEventListener('click', () => {
   }
 });
 
-
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    currentUserId = user.uid;  
+    console.log('Пользователь вошёл:', user.uid);
+    loadProgress(user.uid);
+  } else {
+    window.location.href = 'login.html';
+  }
+});
 
 
 
