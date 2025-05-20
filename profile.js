@@ -124,21 +124,28 @@ saveNicknameBtn.addEventListener('click', function() {
   }
 });
 
-document.getElementById('exportBtn').addEventListener('click', () => {
-  const profile = {
-    nickname: localStorage.getItem('nickname') || '',
-    wood: parseInt(localStorage.getItem('wood')) || 0,
-    workers: parseInt(localStorage.getItem('workers')) || 0,
-    playedTime: parseInt(localStorage.getItem('playedTime')) || 0,
-    profileAvatar: localStorage.getItem('profileAvatar') || '',
-    profileBanner: localStorage.getItem('profileBanner') || ''
-  };
 
-  // Превратим объект в JSON и закодируем в Base64 для компактности и безопасности
-  const jsonStr = JSON.stringify(profile);
-  const base64Str = btoa(jsonStr);
+document.addEventListener("DOMContentLoaded", () => {
+  const loadingScreen = document.getElementById("loading-screen");
+  const progressBar = document.getElementById("progress-bar");
 
-  document.getElementById('exportArea').value = base64Str;
+  if (!loadingScreen || !progressBar) return;
+
+  loadingScreen.style.display = "flex";
+
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += 10;
+    progressBar.style.width = `${progress}%`;
+
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        loadingScreen.style.display = "none";
+      }, 500);
+    }
+  }, 500);
 });
+
 
 

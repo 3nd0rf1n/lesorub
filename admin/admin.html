@@ -1,145 +1,114 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>Админ-панель</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin Panel</title>
 
-  <!-- Подключаем CSS с параметром версии для обхода кеша -->
-  <link id="adminCss" rel="stylesheet" href="" />
+<link rel="stylesheet" href="admin.css" />
 
-  <!-- Манифест PWA -->
-  <link rel="manifest" href="manifest-admin.json" />
-  <meta name="theme-color" content="#4caf50" />
-
-  <script>
-    // Вставляем уникальный параметр версии в ссылку на CSS для обхода кеша
-    const link = document.getElementById('adminCss');
-    link.href = `admin.css?v=${Date.now()}`;
-  </script>
 </head>
 <body>
-  <h1>Админ-панель</h1>
+<h1>Админ панель</h1>
+<button id="logoutBtn">Выйти</button>
+<hr />
+<label for="deviceIdInput">Device ID пользователя:</label>
+<input type="text" id="deviceIdInput" placeholder="Введите deviceID" />
+<button id="loadUserBtn">Загрузить данные пользователя</button>
 
-  <!-- Кнопка установки PWA -->
-  <button id="installBtn" style="display:none; margin-bottom:20px;">Скачать приложение</button>
+<div id="notification"></div>
 
-  <div id="loginSection">
-    <label>Введите пароль:
-      <input type="password" id="adminPassword" />
-    </label>
-    <button id="loginBtn">Войти</button>
-    <p id="loginStatus"></p>
-  </div>
+<div id="userData" class="hidden">
+  <h3>Данные пользователя</h3>
+  <label>Wood: <input type="number" id="woodInput" /></label>
+  <label>Workers: <input type="number" id="workersInput" /></label>
+  <label>Prestige Bonus: <input type="number" id="prestigeBonusInput" /></label>
+  <button id="saveUserBtn">Сохранить изменения</button>
+  <div id="saveMessage"></div>
+</div>
 
-  <div id="adminPanel" style="display:none;">
-    <h2>Настройки игрока</h2>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-    <label>Дерево:
-      <input type="number" id="woodInput" />
-    </label>
-    <label>Рабочие:
-      <input type="number" id="workersInput" />
-    </label>
-    <button onclick="updateStats()">Сохранить изменения</button>
+<!-- Здесь либо подключай свой внешний файл с конфигом -->
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAOqsclFbwauR4XyadH1TNJys149Mx7tHI",
+    authDomain: "lesorub-e022b.firebaseapp.com",
+    databaseURL: "https://lesorub-e022b-default-rtdb.firebaseio.com",
+    projectId: "lesorub-e022b",
+    storageBucket: "lesorub-e022b.firebasestorage.app",
+    messagingSenderId: "634001284128",
+    appId: "1:634001284128:web:3002d6d0bc1338ff1c7045"
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>
 
-    <h2>Достижения</h2>
-    <button onclick="unlockAllAchievements()">Открыть все</button>
-    <button onclick="resetAchievements()">Сбросить достижения</button>
+<script>
+  const auth = firebase.auth();
+  const db = firebase.database();
 
-    <h2>Сброс прогресса</h2>
-    <button onclick="resetProgress()">Сбросить всё</button>
+  const logoutBtn = document.getElementById('logoutBtn');
+  const deviceIdInput = document.getElementById('deviceIdInput');
+  const loadUserBtn = document.getElementById('loadUserBtn');
+  const userDataDiv = document.getElementById('userData');
+  const woodInput = document.getElementById('woodInput');
+  const workersInput = document.getElementById('workersInput');
+  const prestigeBonusInput = document.getElementById('prestigeBonusInput');
+  const saveUserBtn = document.getElementById('saveUserBtn');
+  const saveMessage = document.getElementById('saveMessage');
 
-    <p class="success" id="adminMessage"></p>
-  </div>
+  // Проверка авторизации: если не залогинен, редирект на login
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.href = 'index.html';
+    }
+  });
 
-  <script>
-    const CORRECT_PASSWORD = '200613a';
+  logoutBtn.addEventListener('click', () => {
+    auth.signOut();
+  });
 
-    document.getElementById('loginBtn').addEventListener('click', () => {
-      const inputPassword = document.getElementById('adminPassword').value;
-      if (inputPassword === CORRECT_PASSWORD) {
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
-        loadStats();
+  loadUserBtn.addEventListener('click', () => {
+    const deviceId = deviceIdInput.value.trim();
+    if (!deviceId) return alert('Введите deviceID');
+    saveMessage.textContent = '';
+    userDataDiv.classList.add('hidden');
+
+    db.ref('users/' + deviceId).get().then(snapshot => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        woodInput.value = data.wood || 0;
+        workersInput.value = data.workers || 0;
+        prestigeBonusInput.value = data.prestigeBonus || 0;
+        userDataDiv.classList.remove('hidden');
       } else {
-        document.getElementById('loginStatus').textContent = 'Неверный пароль.';
+        alert('Пользователь не найден');
       }
+    }).catch(err => {
+      alert('Ошибка загрузки данных: ' + err.message);
     });
+  });
 
-    function loadStats() {
-      const wood = localStorage.getItem('wood') || 0;
-      const workers = localStorage.getItem('workers') || 0;
-      document.getElementById('woodInput').value = wood;
-      document.getElementById('workersInput').value = workers;
-    }
+  saveUserBtn.addEventListener('click', () => {
+    const deviceId = deviceIdInput.value.trim();
+    if (!deviceId) return alert('Введите deviceID');
 
-    function updateStats() {
-      const wood = parseInt(document.getElementById('woodInput').value, 10);
-      const workers = parseInt(document.getElementById('workersInput').value, 10);
-      localStorage.setItem('wood', wood);
-      localStorage.setItem('workers', workers);
-      showMessage('Данные успешно обновлены.');
-    }
+    const updatedData = {
+      wood: Number(woodInput.value),
+      workers: Number(workersInput.value),
+      prestigeBonus: Number(prestigeBonusInput.value)
+    };
 
-    function unlockAllAchievements() {
-      const achievements = {
-        achievement1: true,
-        achievement2: true,
-        achievement3: true,
-        achievement4: true,
-        achievement5: true
-      };
-      localStorage.setItem('achievements', JSON.stringify(achievements));
-      showMessage('Все достижения открыты.');
-    }
-
-    function resetAchievements() {
-      localStorage.removeItem('achievements');
-      showMessage('Достижения сброшены.');
-    }
-
-    function resetProgress() {
-      localStorage.clear();
-      showMessage('Прогресс сброшен.');
-    }
-
-    function showMessage(text) {
-      const msg = document.getElementById('adminMessage');
-      msg.textContent = text;
-      setTimeout(() => {
-        msg.textContent = '';
-      }, 3000);
-    }
-
-    // --- Регистрация Service Worker ---
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('Service Worker зарегистрирован'))
-        .catch(err => console.error('Ошибка регистрации Service Worker:', err));
-    }
-
-    // --- Обработка установки PWA ---
-    let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = 'inline-block';
-    });
-
-    installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
-      if (choiceResult.outcome === 'accepted') {
-        console.log('Пользователь принял установку приложения');
-      } else {
-        console.log('Пользователь отклонил установку приложения');
-      }
-      deferredPrompt = null;
-      installBtn.style.display = 'none';
-    });
-  </script>
+    db.ref('users/' + deviceId).update(updatedData)
+      .then(() => {
+        saveMessage.textContent = 'Данные успешно сохранены';
+      })
+      .catch(err => {
+        saveMessage.textContent = 'Ошибка сохранения: ' + err.message;
+      });
+  });
+</script>
 </body>
 </html>

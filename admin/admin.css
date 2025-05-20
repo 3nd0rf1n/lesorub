@@ -1,132 +1,119 @@
-/* admin.css */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
-* {
-  box-sizing: border-box;
-}
+/* admin.css - Голубая тема */
 
 body {
-  font-family: 'Inter', Arial, sans-serif;
-  background: linear-gradient(135deg, #2a2a72, #009ffd);
-  color: #f0f0f0;
-  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #d0e7ff, #a0c4ff);
+  color: #1a2935;
   padding: 30px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  user-select: none;
 }
 
 h1 {
-  font-weight: 700;
-  font-size: 2.5rem;
+  text-align: center;
+  color: #0d3b66;
   margin-bottom: 25px;
-  text-shadow: 0 0 10px #00e0ff;
-}
-
-h2 {
-  font-weight: 600;
-  font-size: 1.5rem;
-  margin-top: 35px;
-  margin-bottom: 15px;
-  border-bottom: 2px solid #00e0ff;
-  padding-bottom: 5px;
-  width: 100%;
-  max-width: 480px;
-}
-
-#loginSection, #adminPanel {
-  background-color: rgba(20, 20, 40, 0.85);
-  padding: 25px 30px;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 255, 255, 0.2);
-  width: 100%;
-  max-width: 480px;
-}
-
-label {
-  display: block;
-  font-weight: 500;
-  margin: 18px 0 8px;
-  font-size: 1rem;
-  color: #c1f9ff;
-}
-
-input[type="number"],
-input[type="password"] {
-  width: 100%;
-  padding: 10px 14px;
-  font-size: 1rem;
-  border: 2px solid #00c9ff;
-  border-radius: 8px;
-  background-color: #152f4a;
-  color: #e0f7ff;
-  transition: border-color 0.3s ease;
-}
-
-input[type="number"]:focus,
-input[type="password"]:focus {
-  outline: none;
-  border-color: #00ffff;
-  box-shadow: 0 0 8px #00ffff;
+  font-weight: 700;
 }
 
 button {
-  background: linear-gradient(90deg, #00ffff, #0077ff);
+  background-color: #0d3b66;
   border: none;
+  color: white;
   padding: 12px 20px;
-  margin-top: 18px;
-  border-radius: 10px;
-  font-size: 1rem;
-  color: #fff;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  box-shadow: 0 4px 12px rgba(0, 255, 255, 0.6);
+  font-size: 16px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.15s ease;
-  width: 100%;
-  max-width: 200px;
+  transition: background-color 0.25s ease;
+  display: inline-block;
+  box-shadow: 0 4px 10px rgba(13,59,102,0.3);
 }
 
 button:hover {
-  background: linear-gradient(90deg, #0077ff, #00ffff);
-  transform: scale(1.05);
+  background-color: #174a8b;
+  box-shadow: 0 6px 14px rgba(23,74,139,0.4);
 }
 
-button:active {
-  transform: scale(0.97);
+#logoutBtn {
+  background-color: #f25f5c;
+  float: right;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 10px rgba(242,95,92,0.4);
 }
 
-#loginStatus {
-  margin-top: 10px;
-  color: #ff5c5c;
+#logoutBtn:hover {
+  background-color: #d94d49;
+  box-shadow: 0 6px 14px rgba(217,77,73,0.5);
+}
+
+label {
   font-weight: 600;
-  min-height: 22px;
+  margin-bottom: 6px;
+  display: block;
+  color: #0d3b66;
+  text-shadow: 0 1px 1px rgba(255 255 255 / 0.7);
 }
 
-.success {
-  margin-top: 16px;
-  color: #5efc8d;
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 2px solid #74a9ff;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 18px;
+  background: #e8f0fe;
+  color: #0d3b66;
+  font-weight: 500;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  outline: none;
+  border-color: #1e90ff;
+  box-shadow: 0 0 8px 2px rgba(30,144,255,0.4);
+}
+
+#userData {
+  background: #ffffffdd;
+  padding: 25px 30px;
+  margin-top: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(13,59,102,0.12);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #a0c4ff;
+  margin: 25px 0;
+}
+
+/* Notification */
+
+#notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #1e90ff;
+  color: white;
+  padding: 14px 24px;
+  border-radius: 25px;
   font-weight: 600;
-  min-height: 24px;
+  box-shadow: 0 6px 14px rgba(30,144,255,0.5);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 9999;
+  user-select: none;
 }
 
-@media (max-width: 520px) {
-  body {
-    padding: 20px 10px;
-  }
-
-  h1 {
-    font-size: 2rem;
-  }
-
-  #loginSection, #adminPanel {
-    padding: 20px 20px;
-    max-width: 100%;
-  }
-
-  button {
-    max-width: 100%;
-  }
+#notification.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
