@@ -1,40 +1,58 @@
 // Загрузка данных профиля (дерево, ник)
+// Загружаем данные профиля
 function loadProfile() {
-    const wood = parseInt(localStorage.getItem('wood')) || 0;
+    const rawWood = localStorage.getItem('wood') || '0';
+    const wood = Number(rawWood.replace(/[^\d]/g, '')) || 0; // удаляем ВСЁ, кроме цифр
+
     const nickname = localStorage.getItem('nickname') || 'Не установлен';
     return { wood, nickname };
 }
 
-// Обновляем UI с балансом дерева и ником
-function updateProfileUI() {
-    const profileWoodEl = document.getElementById('profileWood');
-    const profile = loadProfile();
-    profileWoodEl.textContent = profile.wood.toLocaleString();
-}
+let lastPurchasePrice = 0;
 
-// Обработка покупки товара
+
+// Покупка предмета
 function handleItemPurchase(price, item) {
     const profile = loadProfile();
 
-    // Проверяем, есть ли достаточно дерева
+    console.log('Дерево:', profile.wood, '| Цена:', price); // для отладки
+
     if (profile.wood >= price) {
-        // Уменьшаем количество дерева
-        const newWoodBalance = profile.wood - price;
-        localStorage.setItem('wood', newWoodBalance);
+        const newWood = profile.wood - price;
+        localStorage.setItem('wood', newWood.toString()); // сохраняем строго число
 
         if (item === 'changeNickname') {
-            // Покупка возможности изменить ник
+            lastPurchasePrice = price;
             openChangeNicknameModal();
         }
 
         alert('Покупка успешна!');
-
-        // Обновляем UI
         updateProfileUI();
     } else {
         alert('У вас недостаточно дерева для покупки!');
     }
 }
+
+// Обновление UI
+function updateProfileUI() {
+    const profile = loadProfile();
+    document.getElementById('profileWood').textContent = profile.wood.toLocaleString(); // формат только на экране
+}
+
+// Инициализация кнопок
+function initShop() {
+    const buyButtons = document.querySelectorAll('.buy-btn');
+
+    buyButtons.forEach(button => {
+        const price = parseInt(button.parentElement.getAttribute('data-price')) || 0;
+        const item = button.id === 'changeNicknameBtn' ? 'changeNickname' : '';
+
+        button.addEventListener('click', () => {
+            handleItemPurchase(price, item);
+        });
+    });
+}
+
 
 // Открыть модальное окно для изменения ника
 function openChangeNicknameModal() {
@@ -60,6 +78,22 @@ function closeChangeNicknameModal() {
     const modal = document.getElementById('changeNicknameModal');
     modal.style.display = 'none';
 }
+function closeChangeNicknameModal() {
+    const modal = document.getElementById('changeNicknameModal');
+    modal.style.display = 'none';
+
+    // ✅ Возвращаем дерево
+    const currentWood = parseInt(localStorage.getItem('wood')) || 0;
+    const updatedWood = currentWood + lastPurchasePrice;
+    localStorage.setItem('wood', updatedWood);
+
+    // Обновляем UI
+    updateProfileUI();
+
+    // Сброс переменной
+    lastPurchasePrice = 0;
+}
+
 
 // Инициализация кнопок
 function initShop() {
@@ -114,3 +148,14 @@ function createFallingCoins() {
 
 // Запуск создания монет при загрузке страницы
 createFallingCoins();
+
+function loadProfile() {
+    const rawWood = localStorage.getItem('wood') || '0';
+    const cleanWood = rawWood.replace(/\D/g, ''); // удаляет всё, кроме цифр
+    const wood = parseInt(cleanWood) || 0;
+
+    const nickname = localStorage.getItem('nickname') || 'Не установлен';
+    return { wood, nickname };
+}
+
+

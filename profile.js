@@ -147,5 +147,78 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 500);
 });
 
+// Конфигурация Firebase из твоего проекта (замени на свои данные)
+const firebaseConfig = {
+  apiKey: "AIzaSyAOqsclFbwauR4XyadH1TNJys149Mx7tHI",
+  authDomain: "lesorub-e022b.firebaseapp.com",
+  databaseURL: "https://lesorub-e022b-default-rtdb.firebaseio.com",
+  projectId: "lesorub-e022b",
+  storageBucket: "lesorub-e022b.appspot.com",
+  messagingSenderId: "634001284128",
+  appId: "1:634001284128:web:3002d6d0bc1338ff1c7045"
+};
+
+// Инициализация Firebase
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const database = firebase.database();
+
+function updateRoleDisplay(role) {
+  const roleElem = document.getElementById('profileRole');
+  if (!roleElem) return;
+  roleElem.textContent = role || 'Игрок';
+}
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    const uid = user.uid;
+    const roleRef = database.ref('users/' + uid + '/role');
+    roleRef.once('value').then(snapshot => {
+      const role = snapshot.val() || 'Игрок'; // если роли нет — Игрок
+      updateRoleDisplay(role);
+    }).catch(err => {
+      console.error('Ошибка чтения роли:', err);
+      updateRoleDisplay('Игрок');
+    });
+  } else {
+    updateRoleDisplay('Гость');
+  }
+});
+
+function updateRoleDisplay(role) {
+  const roleElem = document.getElementById('profileRole');
+  if (!roleElem) return;
+
+  const roleLabels = {
+    player: "Игрок",
+    vip: "VIP",
+    premium: "Премиум",
+    moderator: "Модератор",
+    admin: "Админ",
+    guest: "Гость"
+  };
+
+  const roleClasses = {
+    player: "role-player",
+    vip: "role-vip",
+    premium: "role-premium",
+    moderator: "role-moderator",
+    admin: "role-admin",
+    guest: "role-гость"
+  };
+
+  const displayRole = roleLabels[role] || "Игрок";
+  const roleClass = roleClasses[role] || "role-player";
+
+  roleElem.textContent = displayRole;
+
+  // Сброс всех возможных классов
+  roleElem.className = "role-badge";
+  roleElem.classList.add(roleClass);
+}
+
+
+
 
 

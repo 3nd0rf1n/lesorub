@@ -4,7 +4,7 @@ const firebaseConfig = {
   authDomain: "lesorub-e022b.firebaseapp.com",
   databaseURL: "https://lesorub-e022b-default-rtdb.firebaseio.com",
   projectId: "lesorub-e022b",
-  storageBucket: "lesorub-e022b.firebasestorage.app",
+  storageBucket: "lesorub-e022b.appspot.com",
   messagingSenderId: "634001284128",
   appId: "1:634001284128:web:3002d6d0bc1338ff1c7045"
 };
@@ -14,6 +14,7 @@ firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
 // Переменные из localStorage или по умолчанию
+let currentUserId = null;
 let clickCount = 0;
 let clicksRequired = getRandomClicks();
 let wood = parseInt(localStorage.getItem('wood')) || 0;
@@ -69,6 +70,8 @@ function getRandomWoodReward() {
 
 // Сохраняем прогресс в Realtime Database
 function saveProgress() {
+  if (!currentUserId) return; // если пользователь не авторизован, не сохраняем
+
   const data = {
     wood,
     workers,
@@ -77,7 +80,7 @@ function saveProgress() {
     lastVisit: Date.now(),
   };
 
-  database.ref('users/' + deviceId).set(data)
+  database.ref('users/' + currentUserId).set(data)
     .then(() => {
       console.log('Прогресс успешно сохранён в Firebase Realtime Database');
     })
@@ -86,30 +89,40 @@ function saveProgress() {
     });
 }
 
+
 // Загружаем прогресс из Realtime Database
-async function loadProgress() {
+async function loadProgress(uid) {
   try {
-    const snapshot = await database.ref('users/' + deviceId).once('value');
+    const snapshot = await database.ref('users/' + uid).once('value');
     if (snapshot.exists()) {
       const data = snapshot.val();
 
-      wood = data.wood ?? wood;
-      workers = data.workers ?? workers;
-      prestigeBonus = data.prestigeBonus ?? prestigeBonus;
-      unlockedAchievements = data.unlockedAchievements ?? unlockedAchievements;
-      lastVisit = data.lastVisit ?? lastVisit;
+      wood = data.wood ?? 0;
+      workers = data.workers ?? 0;
+      prestigeBonus = data.prestigeBonus ?? 0;
+      unlockedAchievements = data.unlockedAchievements ?? [];
+      lastVisit = data.lastVisit ?? Date.now();
 
       updateDisplay();
       checkAchievements();
 
       console.log('Прогресс загружен из Firebase Realtime Database');
     } else {
-      console.log('Данных в Firebase для пользователя нет, используем localStorage');
+      console.log('Данных в Firebase для пользователя нет, начинаем с нуля');
+      wood = 0;
+      workers = 0;
+      prestigeBonus = 0;
+      unlockedAchievements = [];
+      lastVisit = Date.now();
+
+      updateDisplay();
+      checkAchievements();
     }
   } catch (error) {
     console.error('Ошибка при загрузке прогресса из Firebase: ', error);
   }
 }
+
 
 function updateDisplay() {
   woodEl.textContent = wood;
@@ -282,18 +295,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 300);
 });
 
-// ID устройства
-const deviceId = localStorage.getItem('deviceId') || (() => {
-  const id = 'device-' + Math.random().toString(36).substr(2, 16);
-  localStorage.setItem('deviceId', id);
-  return id;
-})();
-
-// Загружаем прогресс из Firebase при старте
-loadProgress();
-
 // Сохраняем прогресс автоматически каждые 30 секунд
-setInterval(saveProgress, 1000);
+setInterval(saveProgress, 30000);
 
 // Сохраняем прогресс при закрытии страницы
 window.addEventListener('beforeunload', saveProgress);
@@ -315,3 +318,8 @@ chopBtn.addEventListener('click', () => {
     vementPopup(`🪓 Удар по дереву (${clickCount}/${clicksRequired})`);
   }
 });
+
+
+
+
+

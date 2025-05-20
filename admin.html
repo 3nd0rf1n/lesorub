@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Админ-панель Firebase</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Inter', sans-serif;
+    background: #121212;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background: #1f1f1f;
+    padding: 1rem 2rem;
+    font-weight: 600;
+    font-size: 1.4rem;
+    text-align: center;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 6px #0008;
+  }
+  nav {
+    text-align: right;
+    padding: 0.5rem 2rem;
+    background: #1f1f1f;
+    display: none;
+  }
+  nav.show {
+    display: block;
+  }
+  nav button {
+    background: transparent;
+    border: none;
+    color: #0d6efd;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  main {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem;
+  }
+  .container {
+    background: #222;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 400px;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.6);
+  }
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    user-select: none;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  textarea {
+    width: 100%;
+    margin-top: 0.3rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+    background: #333;
+    color: #eee;
+    box-sizing: border-box;
+  }
+  textarea {
+    min-height: 70px;
+    resize: vertical;
+    font-family: monospace;
+  }
+  button {
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 0.8rem;
+    background: #0d6efd;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+  }
+  button:hover:not(:disabled) {
+    background: #0954c6;
+  }
+  button:disabled {
+    background: #555;
+    cursor: default;
+  }
+  .hidden {
+    display: none;
+  }
+  .message {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+    user-select: none;
+  }
+  .message.success {
+    color: #4caf50;
+  }
+  .message.error {
+    color: #f44336;
+  }
+  .tags-container {
+    margin-top: 0.3rem;
+    background: #333;
+    border-radius: 6px;
+    padding: 0.4rem 0.5rem;
+    min-height: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .tag {
+    background: #0d6efd;
+    padding: 0.3rem 0.7rem;
+    border-radius: 12px;
+    color: white;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .tag button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+  }
+  .add-tag-input {
+    flex-grow: 1;
+    background: #222;
+    border: none;
+    color: #eee;
+    font-size: 1rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    min-width: 60px;
+  }
+</style>
+</head>
+<body>
+<header>Админ-панель Firebase</header>
+<nav id="nav">
+  <button id="logout-btn">Выйти</button>
+</nav>
+<main>
+  <div class="container" id="login-container">
+    <h2>Вход в админку</h2>
+    <label for="email-input">Email администратора</label>
+    <input type="email" id="email-input" autocomplete="username" placeholder="admin@example.com" />
+    <label for="password-input">Пароль</label>
+    <input type="password" id="password-input" autocomplete="current-password" />
+    <button id="login-btn">Войти</button>
+    <div id="login-message" class="message"></div>
+  </div>
+
+  <div class="container hidden" id="admin-panel">
+    <h2>Редактирование пользователя</h2>
+    <label for="uid-input">UID пользователя</label>
+    <input type="text" id="uid-input" autocomplete="off" />
+    <button id="load-user-btn">Загрузить данные</button>
+    <div id="load-message" class="message"></div>
+
+    <div id="user-form" class="hidden">
+      <label for="lastVisit">lastVisit (timestamp)</label>
+      <input type="number" id="lastVisit" />
+
+      <label for="prestigeBonus">prestigeBonus</label>
+      <input type="number" id="prestigeBonus" />
+
+      <label>unlockedAchievements (теги)</label>
+      <div class="tags-container" id="achievements-tags">
+        <input type="text" id="new-tag-input" class="add-tag-input" placeholder="Добавить достижение и Enter" />
+      </div>
+
+      <label for="wood">wood</label>
+      <input type="number" id="wood" />
+
+      <label for="workers">workers</label>
+      <input type="number" id="workers" />
+
+      <label for="roleSelect">Роль пользователя</label>
+      <select id="roleSelect">
+        <option value="player">Игрок</option>
+        <option value="vip">Vip</option>
+        <option value="moderator">Moderator</option>
+        <option value="premium">Premium</option>
+        <option value="admin">Admin</option>
+      </select>
+
+      <button id="save-btn">Сохранить изменения</button>
+      <div id="save-message" class="message"></div>
+    </div>
+  </div>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+  const roleSelect = document.getElementById('roleSelect');
+  const firebaseConfig = {
+    apiKey: "AIzaSyAOqsclFbwauR4XyadH1TNJys149Mx7tHI",
+    authDomain: "lesorub-e022b.firebaseapp.com",
+    databaseURL: "https://lesorub-e022b-default-rtdb.firebaseio.com",
+    projectId: "lesorub-e022b",
+    storageBucket: "lesorub-e022b.appspot.com",
+    messagingSenderId: "634001284128",
+    appId: "1:634001284128:web:3002d6d0bc1338ff1c7045"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+
+  const ADMIN_EMAIL = "saylen2006@gmail.com"; // <-- Замените на свой email администратора
+
+  const nav = document.getElementById('nav');
+  const loginContainer = document.getElementById('login-container');
+  const adminPanel = document.getElementById('admin-panel');
+
+  const emailInput = document.getElementById('email-input');
+  const passwordInput = document.getElementById('password-input');
+  const loginBtn = document.getElementById('login-btn');
+  const loginMessage = document.getElementById('login-message');
+
+  const logoutBtn = document.getElementById('logout-btn');
+
+  const uidInput = document.getElementById('uid-input');
+  const loadUserBtn = document.getElementById('load-user-btn');
+  const loadMessage = document.getElementById('load-message');
+
+  const userForm = document.getElementById('user-form');
+  const lastVisitInput = document.getElementById('lastVisit');
+  const prestigeBonusInput = document.getElementById('prestigeBonus');
+  const woodInput = document.getElementById('wood');
+  const workersInput = document.getElementById('workers');
+
+  const achievementsTagsContainer = document.getElementById('achievements-tags');
+  const newTagInput = document.getElementById('new-tag-input');
+
+  const saveBtn = document.getElementById('save-btn');
+  const saveMessage = document.getElementById('save-message');
+
+  let unlockedAchievements = [];
+
+  loginBtn.onclick = () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    loginMessage.textContent = "";
+    if (!email || !password) {
+      loginMessage.textContent = "Введите email и пароль";
+      loginMessage.className = "message error";
+      return;
+    }
+    loginBtn.disabled = true;
+    auth.signInWithEmailAndPassword(email, password)
+      .then(({ user }) => {
+        if (user.email !== ADMIN_EMAIL) {
+          loginMessage.textContent = "Доступ запрещён для этого пользователя";
+          loginMessage.className = "message error";
+          auth.signOut();
+          loginBtn.disabled = false;
+          return;
+        }
+        loginMessage.textContent = "Успешный вход";
+        loginMessage.className = "message success";
+        showAdminPanel();
+      })
+      .catch(error => {
+        loginMessage.textContent = error.message;
+        loginMessage.className = "message error";
+      })
+      .finally(() => loginBtn.disabled = false);
+  };
+
+  logoutBtn.onclick = () => {
+    auth.signOut();
+  };
+
+  auth.onAuthStateChanged(user => {
+    if (user && user.email === ADMIN_EMAIL) {
+      showAdminPanel();
+    } else {
+      showLogin();
+    }
+  });
+
+  function showAdminPanel() {
+    loginContainer.classList.add('hidden');
+    adminPanel.classList.remove('hidden');
+    nav.classList.add('show');
+    clearForm();
+  }
+  function showLogin() {
+    loginContainer.classList.remove('hidden');
+    adminPanel.classList.add('hidden');
+    nav.classList.remove('show');
+    clearForm();
+  }
+
+  function clearForm() {
+    uidInput.value = "";
+    lastVisitInput.value = "";
+    prestigeBonusInput.value = "";
+    woodInput.value = "";
+    workersInput.value = "";
+    unlockedAchievements = [];
+    renderAchievementsTags();
+    userForm.classList.add('hidden');
+    loadMessage.textContent = "";
+    saveMessage.textContent = "";
+  }
+
+  loadUserBtn.onclick = () => {
+    const uid = uidInput.value.trim();
+    if (!uid) {
+      loadMessage.textContent = "Введите UID пользователя";
+      loadMessage.className = "message error";
+      return;
+    }
+    loadMessage.textContent = "";
+    loadUserBtn.disabled = true;
+
+    db.ref('users/' + uid).get()
+      .then(snapshot => {
+        if (!snapshot.exists()) {
+          loadMessage.textContent = "Пользователь не найден";
+          loadMessage.className = "message error";
+          userForm.classList.add('hidden');
+          return;
+        }
+        const data = snapshot.val();
+        lastVisitInput.value = data.lastVisit || "";
+        prestigeBonusInput.value = data.prestigeBonus || "";
+        woodInput.value = data.wood || "";
+        workersInput.value = data.workers || "";
+        unlockedAchievements = Array.isArray(data.unlockedAchievements) ? data.unlockedAchievements : [];
+        roleSelect.value = data.role || "player";
+
+        renderAchievementsTags();
+
+        userForm.classList.remove('hidden');
+        loadMessage.textContent = "Данные загружены";
+        loadMessage.className = "message success";
+      })
+      .catch(error => {
+        loadMessage.textContent = "Ошибка загрузки: " + error.message;
+        loadMessage.className = "message error";
+      })
+      .finally(() => loadUserBtn.disabled = false);
+  };
+
+  saveBtn.onclick = () => {
+    const uid = uidInput.value.trim();
+    if (!uid) {
+      saveMessage.textContent = "Введите UID пользователя";
+      saveMessage.className = "message error";
+      return;
+    }
+    saveMessage.textContent = "";
+    saveBtn.disabled = true;
+
+    const updatedData = {
+      lastVisit: parseInt(lastVisitInput.value) || null,
+      prestigeBonus: parseInt(prestigeBonusInput.value) || null,
+      unlockedAchievements,
+      wood: parseInt(woodInput.value) || 0,
+      workers: parseInt(workersInput.value) || 0,
+      role: roleSelect.value
+    };
+
+    db.ref('users/' + uid).update(updatedData)
+      .then(() => {
+        saveMessage.textContent = "Данные сохранены";
+saveMessage.className = "message success";
+})
+.catch(error => {
+saveMessage.textContent = "Ошибка сохранения: " + error.message;
+saveMessage.className = "message error";
+})
+.finally(() => saveBtn.disabled = false);
+};
+
+newTagInput.onkeydown = function(event) {
+if (event.key === 'Enter' && newTagInput.value.trim()) {
+unlockedAchievements.push(newTagInput.value.trim());
+newTagInput.value = "";
+renderAchievementsTags();
+}
+};
+
+function renderAchievementsTags() {
+achievementsTagsContainer.innerHTML = "";
+unlockedAchievements.forEach(tag => {
+const tagElement = document.createElement('div');
+tagElement.className = 'tag';
+tagElement.textContent = tag;
+const removeBtn = document.createElement('button');
+removeBtn.textContent = "×";
+removeBtn.onclick = () => {
+unlockedAchievements = unlockedAchievements.filter(t => t !== tag);
+renderAchievementsTags();
+};
+tagElement.appendChild(removeBtn);
+achievementsTagsContainer.appendChild(tagElement);
+});
+}
+</script>
+
+</body> </html>
