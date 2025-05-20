@@ -14,6 +14,8 @@ firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
 // Переменные из localStorage или по умолчанию
+let clickCount = 0;
+let clicksRequired = getRandomClicks();
 let wood = parseInt(localStorage.getItem('wood')) || 0;
 let workers = parseInt(localStorage.getItem('workers')) || 0;
 let prestigeBonus = parseInt(localStorage.getItem('prestigeBonus')) || 0;
@@ -56,6 +58,14 @@ const achievements = [
   { id: 'overkill', name: 'Больше чем нужно', condition: () => wood >= 1000000 },
   { id: 'lazy', name: 'Пусть другие работают', condition: () => workers >= 100 && wood === 0 },
 ];
+
+function getRandomClicks() {
+  return Math.floor(Math.random() * 5) + 3; // от 3 до 7 кликов
+}
+
+function getRandomWoodReward() {
+  return Math.floor(Math.random() * 11) + 5; // от 5 до 15 дерева
+}
 
 // Сохраняем прогресс в Realtime Database
 function saveProgress() {
@@ -283,7 +293,25 @@ const deviceId = localStorage.getItem('deviceId') || (() => {
 loadProgress();
 
 // Сохраняем прогресс автоматически каждые 30 секунд
-setInterval(saveProgress, 30000);
+setInterval(saveProgress, 1000);
 
 // Сохраняем прогресс при закрытии страницы
 window.addEventListener('beforeunload', saveProgress);
+
+chopBtn.addEventListener('click', () => {
+  clickCount++;
+
+  if (clickCount >= clicksRequired) {
+    const reward = getRandomWoodReward();
+    wood += reward;
+    clickCount = 0;
+    clicksRequired = getRandomClicks();
+
+    vementPopup(`🌲 Вы срубили дерево и получили ${reward} дерева!`);
+
+    updateDisplay();
+    checkAchievements();
+  } else {
+    vementPopup(`🪓 Удар по дереву (${clickCount}/${clicksRequired})`);
+  }
+});
