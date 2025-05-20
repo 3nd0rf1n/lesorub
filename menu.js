@@ -76,11 +76,3 @@ showTip(currentTipIndex);
 // Меняем совет каждые 7 секунд
 setInterval(nextTip, 7000);
 
-document.addEventListener('DOMContentLoaded', () => {
-  const loginBtn = document.getElementById('loginBtn');
-  if (loginBtn) {
-    loginBtn.addEventListener('click', () => {
-      window.location.href = 'login.html'; // или путь к твоей странице входа
-    });
-  }
-});

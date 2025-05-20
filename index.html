@@ -6,49 +6,116 @@
   <title>Меню игры</title>
   <link rel="stylesheet" href="menu.css" />
   <link rel="manifest" href="/manifest.json" />
-<meta name="theme-color" content="#0078D7" />
+  <meta name="theme-color" content="#0078D7" />
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 </head>
 
 <body>
 
   <div class="menu-container">
     <h1>Добро пожаловать в игру!</h1>
+    <p id="welcomeMessage" style="display: none;">👋 Привет, <span id="userName"></span>!</p>
     <nav class="menu-buttons">
       <button id="loginBtn" class="neon-button">Войти</button>
+      <button id="logoutBtn" class="neon-button" style="display: none;">Выйти</button>
       <button id="startGameBtn">Начать игру</button>
       <button id="settingsBtn">Настройки</button>
       <button id="shopBtn">Магазин</button>
     </nav>
   </div>
 
- <!-- Кнопка FAQ снизу справа -->
-<button id="faqBtn" title="FAQ">FAQ</button>
+  <!-- Кнопка FAQ снизу справа -->
+  <button id="faqBtn" title="FAQ">FAQ</button>
 
-<script>
-  document.getElementById('faqBtn').addEventListener('click', () => {
-    window.location.href = 'faq.html';
-  });
-  
-</script>
+  <div id="tip" class="tip-container"></div>
 
-<div id="tip" class="tip-container"></div>
+  <div id="updatePopup" class="update-popup">
+    <h2>🆕 Новое обновление</h2>
+    <h3>Версия 1.2 Alpha</h3>
+    <ul>
+      <li>Добавлен Профиль!</li>
+      <li>Исправлен баг с синим квадратиком на всех объектах!</li>
+      <li>Добавлен магазин!</li>
+      <li>Добавлена возможность сменить ник в профиле - в магазине!</li>
+      <li>Мелкие улучшеня!</li>
+    </ul>
+  </div>
 
- <div id="updatePopup" class="update-popup">
-  <h2>🆕 Новое обновление</h2>
-  <h3>Версия 1.2 Alpha</h3>
-  <ul>
-    <li>Добавлен Профиль!</li>
-    <li>Исправлен баг с синим квадратиком на всех объектах!</li>
-    <li>Добавлен магазин!</li>
-    <li>Добавлена возможность сменить ник в профиле - в магазине!</li>
-    <li>Мелкие улучшеня!</li>
-  </ul>
-</div>
+  <!-- Уведомление -->
+  <div id="notification" class="tip-container" style="display: none;"></div>
 
+  <script>
+    // Firebase инициализация
+    const firebaseConfig = {
+      apiKey: "AIzaSyAOqsclFbwauR4XyadH1TNJys149Mx7tHI",
+      authDomain: "lesorub-e022b.firebaseapp.com",
+      databaseURL: "https://lesorub-e022b-default-rtdb.firebaseio.com",
+      projectId: "lesorub-e022b",
+      storageBucket: "lesorub-e022b.appspot.com",
+      messagingSenderId: "634001284128",
+      appId: "1:634001284128:web:3002d6d0bc1338ff1c7045"
+    };
+    firebase.initializeApp(firebaseConfig);
 
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const startGameBtn = document.getElementById('startGameBtn');
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    const userNameSpan = document.getElementById('userName');
+    const notification = document.getElementById('notification');
 
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+        welcomeMessage.style.display = 'block';
+        userNameSpan.textContent = user.displayName || user.email;
+      } else {
+        loginBtn.style.display = 'inline-block';
+        logoutBtn.style.display = 'none';
+        welcomeMessage.style.display = 'none';
+        userNameSpan.textContent = '';
+      }
+    });
+
+    loginBtn.addEventListener('click', () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider).catch(err => {
+        console.error("Ошибка входа:", err);
+      });
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      firebase.auth().signOut().catch(err => {
+        console.error("Ошибка выхода:", err);
+      });
+    });
+
+    startGameBtn.addEventListener('click', () => {
+      const user = firebase.auth().currentUser;
+      if (user) {
+        window.location.href = 'index.html'; // Заменить на вашу игровую страницу
+      } else {
+        showNotification('Пользователь не вошел в аккаунт!');
+      }
+    });
+
+    document.getElementById('faqBtn').addEventListener('click', () => {
+      window.location.href = 'faq.html';
+    });
+
+    function showNotification(message) {
+      notification.textContent = message;
+      notification.style.display = 'block';
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 3000);
+    }
+  </script>
 
   <script src="menu.js"></script>
-
 </body>
 </html>
