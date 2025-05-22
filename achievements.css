@@ -91,25 +91,6 @@ button#closeAchievements:hover {
   100% { opacity: 1; }
 }
 
-/* Контейнер прогресс-бара */
-#progress-bar-container {
-  width: 80%;
-  height: 25px;
-  background: linear-gradient(45deg, #6e7f7d, #3a4642); /* Градиентный фон */
-  border-radius: 50px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Тень вокруг прогресс-бара */
-  overflow: hidden;
-}
-
-/* Сам прогресс-бар */
-#progress-bar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(45deg, #ff3d00, #ffbb33); /* Градиентный цвет */
-  border-radius: 50px;
-  transition: width 0.3s ease-in-out;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Тень для самого прогресса */
-}
 
 #particles-js {
   position: fixed;

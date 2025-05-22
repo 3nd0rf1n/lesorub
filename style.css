@@ -61,28 +61,27 @@ button:active {
 }
 
 /* Всплывающее достижение */
-.achievement-popup {
+#achievementPopup {
   position: fixed;
   top: 20px;
-  right: 20px;
-  background: #3f4658;
-  padding: 16px 28px;
-  border-radius: 12px;
-  color: #ffffff;
-  font-weight: bold; /* Жирный шрифт для всплывающих достижений */
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #007b9a58;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  z-index: 9999;
   opacity: 0;
-  transition: opacity 0.4s ease, transform 0.3s ease;
-  transform: translateY(-30px);
-  font-size: 16px;
+  transition: opacity 0.4s ease, top 0.4s ease;
+  pointer-events: none;
 }
 
-/* Показ достижения */
-.achievement-popup.show {
+#achievementPopup.show {
   opacity: 1;
-  transform: translateY(0);
+  top: 40px;
 }
+
 
 /* Модальное окно достижений */
 .modal {
@@ -454,18 +453,46 @@ img {
     -webkit-user-select: none; /* Для WebKit-браузеров */
 }
 
-.progress-bar {
-  height: 20px;
-  background-color: #ccc;
-  border-radius: 10px;
-  overflow: hidden;
-  width: 130px; /* по ширине как у кнопки */
-  margin: 0 auto; /* центрируем */
+/* Фон */
+.background {
+  background-image: url('background-clear.png'); /* по умолчанию - чёткий фон */
+  background-size: cover;
+  background-position: center;
+  transition: filter 0.3s ease;
 }
 
-.progress-fill {
-  height: 100%;
-  width: 0%;
-  background-color: #4caf50;
-  transition: width 0.3s ease;
+/* Низкое качество: мыльный фон + пиксельные надписи */
+.graphics-low .background {
+  filter: blur(5px);
+  background-image: url('your-blurry-background.png'); /* можно оставить обычный фон */
+}
+
+
+.graphics-low .text {
+  image-rendering: pixelated; /* пиксельные надписи */
+  font-family: 'Press Start 2P', monospace; /* например пиксельный шрифт */
+  font-weight: normal;
+  filter: blur(0.5px); /* легкая "пикселизация" */
+}
+
+/* Среднее качество: мыльный фон, но надписи четкие */
+.graphics-medium .background {
+  filter: blur(3px);
+}
+
+.graphics-medium .text {
+  image-rendering: auto;
+  font-family: Arial, sans-serif;
+  filter: none;
+}
+
+/* Высокое качество: чёткий фон и чёткие надписи */
+.graphics-high .background {
+  filter: none;
+}
+
+.graphics-high .text {
+  image-rendering: auto;
+  font-family: Arial, sans-serif;
+  filter: none;
 }

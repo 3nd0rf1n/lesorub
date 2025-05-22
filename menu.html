@@ -20,13 +20,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
-  <div id="loading-screen">
-    <p>Завантаження гри...</p>
-    <div id="progress-bar-container">
-      <div id="progress-bar"></div>
-    </div>
-  </div>
-
   <div id="achievementPopup" class="achievement-popup hidden">
     <p id="achievementMessage">🏆 Досягнення!</p>
   </div>
@@ -46,6 +39,7 @@
         <p>🌲 Дерево: <span id="wood">0</span></p>
         <p>👷 Робітники: <span id="workers">0</span></p>
         <p>📈 Дерево в сек: <span id="woodPerSecond">0</span></p>
+        <div id="prestigeDisplay">⭐ Престижі: 0</div>
       </div>
     </div>
 
@@ -57,8 +51,8 @@
 
     <div class="right-panel">
       <div id="upgrades" class="card">
-        <button id="buyWorker">👷 Найняти робітника (10 дерева)</button>
-        <button id="resetGame">♻️ Престиж (1000 дерева)</button>
+        <button id="buyWorker">Найняти Робітника (<span id="workerPrice">10</span> дерева)</button>
+        <button id="resetGame">♻️ Престиж (10000 дерева)</button>
         <button id="settingsBtn">Настройки</button>
         <a href="achievements.html" class="action-btn">🏆 Досягнення</a>
         <button id="toggle-music">🔊</button>
@@ -69,6 +63,8 @@
       </div>
     </div>
   </div>
+
+  <div id="notification"></div>
 
   <a href="profile.html" id="profileBtn" class="profile-btn">
     <img src="icons/profile-icon.png" alt="Вход в профиль" />

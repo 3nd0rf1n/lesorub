@@ -298,3 +298,32 @@ img {
     outline: none; /* Убираем обводку при фокусе */
     -webkit-user-select: none; /* Для WebKit-браузеров */
 }
+
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.toast {
+  background-color: #333;
+  color: #fff;
+  padding: 12px 18px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  font-family: sans-serif;
+  opacity: 0.95;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 0.95; transform: translateY(0); }
+}
+
+@keyframes fadeout {
+  from { opacity: 0.95; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-10px); }
+}

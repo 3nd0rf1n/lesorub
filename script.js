@@ -23,6 +23,7 @@ let prestigeBonus = parseInt(localStorage.getItem('prestigeBonus')) || 0;
 let unlockedAchievements = JSON.parse(localStorage.getItem('achievements')) || [];
 let lastVisit = parseInt(localStorage.getItem('lastVisit')) || Date.now();
 
+const prestigeDisplay = document.getElementById('prestigeDisplay');
 const woodEl = document.getElementById('wood');
 const workersEl = document.getElementById('workers');
 const woodPerSecondEl = document.getElementById('woodPerSecond');
@@ -128,6 +129,7 @@ function updateDisplay() {
   woodEl.textContent = wood;
   workersEl.textContent = workers;
   woodPerSecondEl.textContent = workers * (1 + prestigeBonus);
+    prestigeDisplay.textContent = `⭐ Престижі: ${prestigeBonus}`;
   localStorage.setItem('wood', wood);
   localStorage.setItem('workers', workers);
   localStorage.setItem('prestigeBonus', prestigeBonus);
@@ -176,13 +178,16 @@ buyWorkerBtn.addEventListener('click', () => {
   if (wood >= 10) {
     wood -= 10;
     workers++;
+    window.gameStats.workersHired++; // ✅ обновляем статистику
     updateDisplay();
     checkAchievements();
+    checkTasksCompletion(); // ✅ проверка заданий
   }
 });
 
+
 resetGameBtn.addEventListener('click', () => {
-  if (wood >= 1000) {
+  if (wood >= 10000) {
     wood = 0;
     workers = 0;
     prestigeBonus += 1;
@@ -190,7 +195,7 @@ resetGameBtn.addEventListener('click', () => {
     checkAchievements();
     vementPopup(`🔁 Престиж! Новый бонус: +${prestigeBonus}`);
   } else {
-    vementPopup("Для сброса прогресса нужно хотя бы 1000 дерева.");
+    vementPopup("Для сброса прогресса нужно хотя бы 10000 дерева.");
   }
 });
 
@@ -274,27 +279,6 @@ setInterval(() => {
 updateDisplay();
 checkAchievements();
 
-// ✅ Прогресс-бар и скрытие загрузки
-document.addEventListener("DOMContentLoaded", () => {
-  const loadingScreen = document.getElementById("loading-screen");
-  const progressBar = document.getElementById("progress-bar");
-
-  if (!loadingScreen || !progressBar) return;
-
-  loadingScreen.style.display = "flex";
-
-  let progress = 0;
-  const interval = setInterval(() => {
-    progress += Math.random() * 15;
-    progressBar.style.width = progress + "%";
-
-    if (progress >= 100) {
-      clearInterval(interval);
-      loadingScreen.style.display = "none";
-    }
-  }, 300);
-});
-
 // Сохраняем прогресс автоматически каждые 30 секунд
 setInterval(saveProgress, 30000);
 
@@ -312,12 +296,18 @@ chopBtn.addEventListener('click', () => {
 
     vementPopup(`🌲 Вы срубили дерево и получили ${reward} дерева!`);
 
+    // учёт в статистике
+    window.gameStats.treesCut++;
+    window.gameStats.coinsCollected += reward;
+
     updateDisplay();
     checkAchievements();
+    checkTasksCompletion(); // ✅ проверка заданий
   } else {
     vementPopup(`🪓 Удар по дереву (${clickCount}/${clicksRequired})`);
   }
 });
+
 
 firebase.auth().onAuthStateChanged(user => {
   if (user) {
@@ -329,5 +319,105 @@ firebase.auth().onAuthStateChanged(user => {
   }
 });
 
+// В начале
+window.gameStats = {
+  workersHired: 0,
+  timePlayed: 0,
+  treesCut: 0,
+  coinsCollected: 0,
+  questsCompleted: 0,
+};
+
+// Счётчик времени игры (1 секунда)
+setInterval(() => {
+  window.gameStats.timePlayed++;
+}, 1000);
+
+// В нужных местах игры:
+function hireWorker() {
+  // логика найма
+  window.gameStats.workersHired++;
+}
+
+function cutTree() {
+  // логика рубки дерева
+  window.gameStats.treesCut++;
+}
+
+function checkTasksCompletion() {
+  let updated = false;
+
+  for (const task of battlepass.tasks) {
+    if (!battlepass.tasksDone.includes(task.id)) {
+      const template = tasksTemplates.find(t => t.id === task.id);
+      if (template && template.checkComplete(window.gameStats)) {
+        addXP(10);
+        addTP(10);
+        battlepass.tasksDone.push(task.id);
+        updated = true;
+        console.log(`Задание выполнено: ${task.description}`);
+      }
+    }
+  }
+
+  if (updated) {
+    saveBattlepass();
+    renderTasks();
+  }
+}
 
 
+setInterval(() => {
+  checkTasksCompletion();
+}, 5000); // каждые 5 секунд
+
+function checkTasksCompletion() {
+  let updated = false;
+  for (const task of battlepass.tasks) {
+    if (!battlepass.tasksDone.includes(task.id)) {
+      const template = tasksTemplates.find(t => t.id === task.id);
+      if (template && template.checkComplete(window.gameStats)) {
+        // Добавляем в список выполненных
+        battlepass.tasksDone.push(task.id);
+        updated = true;
+        console.log(`Задание выполнено: ${task.description}`);
+      }
+    }
+  }
+  if (updated) {
+    saveBattlepass(); // Сохраняет в Firebase вместе с tasksDone
+  }
+}
+
+function showNotification(message, type = 'info') {
+  const notif = document.getElementById('notification');
+  notif.textContent = message;
+  notif.className = ''; // очистить классы
+  notif.classList.add(type, 'show');
+
+  clearTimeout(notif.hideTimeout);
+  notif.hideTimeout = setTimeout(() => {
+    notif.classList.remove('show');
+  }, 3000);
+}
+
+ document.getElementById('settingsBtn').addEventListener('click', () => {
+    window.location.href = 'settings.html';
+  });
+
+  const savedGraphics = localStorage.getItem('graphicsQuality');
+
+document.body.classList.remove('graphics-low', 'graphics-medium', 'graphics-high');
+
+switch (savedGraphics) {
+  case 'low':
+    document.body.classList.add('graphics-low');
+    break;
+  case 'medium':
+    document.body.classList.add('graphics-medium');
+    break;
+  case 'high':
+  default:
+    document.body.classList.add('graphics-high');
+    break;
+}

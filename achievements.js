@@ -45,28 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("closeAchievements").addEventListener("click", () => {
-    window.location.href = "index.html";
+    window.location.href = "menu.html";
   });
-
-  // Прогресс-бар
-  const loadingScreen = document.getElementById("loading-screen");
-  const progressBar = document.getElementById("progress-bar");
-
-  if (loadingScreen && progressBar) {
-    loadingScreen.style.display = "flex";
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 10;
-      progressBar.style.width = `${progress}%`;
-
-      if (progress >= 100) {
-        clearInterval(interval);
-        setTimeout(() => {
-          loadingScreen.style.display = "none";
-        }, 150);
-      }
-    }, 150);
-  }
 
   // Частицы
   particlesJS('particles-js', {

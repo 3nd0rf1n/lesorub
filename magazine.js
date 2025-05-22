@@ -1,56 +1,37 @@
 // Загрузка данных профиля (дерево, ник)
-// Загружаем данные профиля
 function loadProfile() {
-    const rawWood = localStorage.getItem('wood') || '0';
-    const wood = Number(rawWood.replace(/[^\d]/g, '')) || 0; // удаляем ВСЁ, кроме цифр
-
+    const wood = parseInt(localStorage.getItem('wood')) || 0;
     const nickname = localStorage.getItem('nickname') || 'Не установлен';
     return { wood, nickname };
 }
 
-let lastPurchasePrice = 0;
+// Обновляем UI с балансом дерева и ником
+function updateProfileUI() {
+    const profileWoodEl = document.getElementById('profileWood');
+    const profile = loadProfile();
+    profileWoodEl.textContent = profile.wood.toLocaleString();
+}
 
-
-// Покупка предмета
+// Обработка покупки товара
 function handleItemPurchase(price, item) {
     const profile = loadProfile();
 
-    console.log('Дерево:', profile.wood, '| Цена:', price); // для отладки
-
     if (profile.wood >= price) {
-        const newWood = profile.wood - price;
-        localStorage.setItem('wood', newWood.toString()); // сохраняем строго число
-
         if (item === 'changeNickname') {
-            lastPurchasePrice = price;
+            // Просто сохраняем цену во временную переменную
+            localStorage.setItem('pendingNicknameChangePrice', price);
             openChangeNicknameModal();
+            return;
         }
 
-        alert('Покупка успешна!');
+        // Если другой товар
+        const newWoodBalance = profile.wood - price;
+        localStorage.setItem('wood', newWoodBalance);
+        showToast('Покупка успешна!', 'success');
         updateProfileUI();
     } else {
-        alert('У вас недостаточно дерева для покупки!');
+        showToast('Недостаточно дерева для покупки!', 'error');
     }
-}
-
-// Обновление UI
-function updateProfileUI() {
-    const profile = loadProfile();
-    document.getElementById('profileWood').textContent = profile.wood.toLocaleString(); // формат только на экране
-}
-
-// Инициализация кнопок
-function initShop() {
-    const buyButtons = document.querySelectorAll('.buy-btn');
-
-    buyButtons.forEach(button => {
-        const price = parseInt(button.parentElement.getAttribute('data-price')) || 0;
-        const item = button.id === 'changeNicknameBtn' ? 'changeNickname' : '';
-
-        button.addEventListener('click', () => {
-            handleItemPurchase(price, item);
-        });
-    });
 }
 
 
@@ -66,10 +47,20 @@ function saveNewNickname() {
 
     if (newNickname) {
         localStorage.setItem('nickname', newNickname);
-        alert('Ник успешно изменён!');
+
+        const price = parseInt(localStorage.getItem('pendingNicknameChangePrice'));
+        if (!isNaN(price)) {
+            const profile = loadProfile();
+            const newBalance = profile.wood - price;
+            localStorage.setItem('wood', newBalance);
+            localStorage.removeItem('pendingNicknameChangePrice');
+            updateProfileUI();
+        }
+
+        showToast('Ник успешно изменён!', 'success');
         closeChangeNicknameModal();
     } else {
-        alert('Пожалуйста, введите новый ник!');
+        showToast('Введите новый ник!', 'info');
     }
 }
 
@@ -77,21 +68,7 @@ function saveNewNickname() {
 function closeChangeNicknameModal() {
     const modal = document.getElementById('changeNicknameModal');
     modal.style.display = 'none';
-}
-function closeChangeNicknameModal() {
-    const modal = document.getElementById('changeNicknameModal');
-    modal.style.display = 'none';
-
-    // ✅ Возвращаем дерево
-    const currentWood = parseInt(localStorage.getItem('wood')) || 0;
-    const updatedWood = currentWood + lastPurchasePrice;
-    localStorage.setItem('wood', updatedWood);
-
-    // Обновляем UI
-    updateProfileUI();
-
-    // Сброс переменной
-    lastPurchasePrice = 0;
+    localStorage.removeItem('pendingNicknameChangePrice'); // отмена покупки
 }
 
 
@@ -100,18 +77,21 @@ function initShop() {
     const buyButtons = document.querySelectorAll('.buy-btn');
 
     buyButtons.forEach(button => {
-        const price = parseInt(button.parentElement.getAttribute('data-price'));
+        const priceEl = button.closest('[data-price]');
+        const price = parseInt(priceEl?.dataset.price);
         const item = button.id === 'changeNicknameBtn' ? 'changeNickname' : '';
+
+        console.log('Цена из data-price:', priceEl?.dataset.price, 'Парсится как:', price);
 
         button.addEventListener('click', function() {
             handleItemPurchase(price, item);
         });
     });
 
-    // Кнопки для изменения ника
     document.getElementById('saveNewNicknameBtn').addEventListener('click', saveNewNickname);
     document.getElementById('cancelChangeNicknameBtn').addEventListener('click', closeChangeNicknameModal);
 }
+
 
 // Первый вызов при загрузке страницы
 window.addEventListener('DOMContentLoaded', () => {
@@ -146,16 +126,25 @@ function createFallingCoins() {
     }
 }
 
-// Запуск создания монет при загрузке страницы
-createFallingCoins();
 
-function loadProfile() {
-    const rawWood = localStorage.getItem('wood') || '0';
-    const cleanWood = rawWood.replace(/\D/g, ''); // удаляет всё, кроме цифр
-    const wood = parseInt(cleanWood) || 0;
+function showToast(message, type = 'default') {
+    const toastContainer = document.getElementById('toastContainer');
 
-    const nickname = localStorage.getItem('nickname') || 'Не установлен';
-    return { wood, nickname };
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+
+    if (type === 'success') toast.style.backgroundColor = '#4caf50';
+    if (type === 'error') toast.style.backgroundColor = '#f44336';
+    if (type === 'info') toast.style.backgroundColor = '#2196f3';
+
+    toast.textContent = message;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
 }
 
-
+// Запуск создания монет при загрузке страницы
+createFallingCoins();
